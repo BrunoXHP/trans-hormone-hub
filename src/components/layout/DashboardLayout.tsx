@@ -1,0 +1,61 @@
+
+import { ReactNode } from "react";
+import DashboardSidebar from "./DashboardSidebar";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const [username, setUsername] = useState("Usuário");
+  
+  return (
+    <div className="min-h-screen flex bg-background">
+      {/* Desktop sidebar */}
+      <DashboardSidebar />
+      
+      <div className="flex-1 md:ml-64">
+        {/* Mobile header */}
+        <header className="flex items-center justify-between p-4 border-b md:hidden">
+          <Link to="/" className="flex items-center">
+            <span className="text-xl font-bold gradient-text">TransFormAção</span>
+          </Link>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <DashboardSidebar />
+            </SheetContent>
+          </Sheet>
+        </header>
+        
+        {/* Desktop header */}
+        <header className="hidden md:flex items-center justify-end p-4 border-b">
+          <div className="flex items-center">
+            <span className="mr-2 text-sm font-medium">Olá, {username}</span>
+            <Link to="/dashboard/profile">
+              <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center">
+                {username.charAt(0).toUpperCase()}
+              </div>
+            </Link>
+          </div>
+        </header>
+        
+        <main className="p-4 md:p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardLayout;
