@@ -60,23 +60,23 @@ const CalendarPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-4 md:p-6">
+      <div className="w-full max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Minha Agenda</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Calendário */}
-          <Card className="md:col-span-1">
+          <Card className="md:col-span-1 h-fit">
             <CardHeader>
               <CardTitle>Calendário</CardTitle>
               <CardDescription>Gerenciamento de consultas e lembretes</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex justify-center">
               <Calendar 
                 mode="single" 
                 selected={date} 
                 onSelect={setDate} 
                 locale={ptBR}
-                className="rounded-md border"
+                className="rounded-md border mx-auto"
               />
             </CardContent>
           </Card>
