@@ -11,6 +11,7 @@ import InfoPage from "./pages/InfoPage";
 import FaqPage from "./pages/FaqPage";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import ProfilePage from "./pages/dashboard/ProfilePage";
+import CalendarPage from "./pages/dashboard/CalendarPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/dashboard" element={<DashboardHome />} />
           <Route path="/dashboard/profile" element={<ProfilePage />} />
+          <Route path="/dashboard/calendar" element={<CalendarPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
