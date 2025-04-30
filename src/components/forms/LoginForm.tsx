@@ -23,7 +23,7 @@ const LoginForm = () => {
       setTimeout(() => {
         toast({
           title: "Login realizado com sucesso!",
-          description: "Bem-vindo(a) de volta.",
+          description: "Bem-vindo(a) de volta ao Transcare.",
         });
         navigate("/dashboard");
       }, 1000);

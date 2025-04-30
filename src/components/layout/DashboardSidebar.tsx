@@ -48,7 +48,7 @@ const DashboardSidebar = () => {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-sidebar border-r p-4 hidden md:block">
       <Link to="/" className="flex items-center mb-8 mt-4">
-        <span className="text-xl font-bold gradient-text">TransFormAção</span>
+        <span className="text-xl font-bold gradient-text">Transcare</span>
       </Link>
       
       <nav className="space-y-1">

@@ -14,7 +14,7 @@ const HomePage = () => {
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
             <div className="max-w-2xl">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 gradient-text">
-                TransFormAção
+                Transcare
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-foreground/80">
                 Informações confiáveis e suporte para sua jornada de terapia hormonal.
