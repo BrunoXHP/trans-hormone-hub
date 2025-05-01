@@ -4,6 +4,13 @@ import PageLayout from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Search, User } from "lucide-react";
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const HomePage = () => {
   return (
@@ -64,6 +71,76 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Image Carousel Section */}
+      <section className="py-16 bg-accent/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold mb-4">Jornada de Transformação</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Acompanhamos cada etapa do seu processo com cuidado e atenção personalizada
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <div className="p-1">
+                    <div className="overflow-hidden rounded-xl">
+                      <img 
+                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
+                        alt="Pessoa usando laptop para acessar informações de saúde"
+                        className="w-full h-[400px] object-cover"
+                      />
+                    </div>
+                    <div className="text-center mt-4">
+                      <h3 className="text-lg font-medium">Acesso a recursos personalizados</h3>
+                      <p className="text-muted-foreground">Informações precisas e adaptadas à sua jornada</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+                
+                <CarouselItem>
+                  <div className="p-1">
+                    <div className="overflow-hidden rounded-xl">
+                      <img 
+                        src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+                        alt="Tecnologia e saúde integradas"
+                        className="w-full h-[400px] object-cover"
+                      />
+                    </div>
+                    <div className="text-center mt-4">
+                      <h3 className="text-lg font-medium">Tecnologia a serviço da sua saúde</h3>
+                      <p className="text-muted-foreground">Ferramentas digitais para acompanhamento hormonal</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+                
+                <CarouselItem>
+                  <div className="p-1">
+                    <div className="overflow-hidden rounded-xl">
+                      <img 
+                        src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" 
+                        alt="Pessoa em casa acessando a plataforma"
+                        className="w-full h-[400px] object-cover"
+                      />
+                    </div>
+                    <div className="text-center mt-4">
+                      <h3 className="text-lg font-medium">Acompanhamento remoto</h3>
+                      <p className="text-muted-foreground">Acesse suas informações de qualquer lugar</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+              <div className="flex justify-center mt-4">
+                <CarouselPrevious className="relative static translate-y-0 mx-2" />
+                <CarouselNext className="relative static translate-y-0 mx-2" />
+              </div>
+            </Carousel>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,6 +188,55 @@ const HomePage = () => {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Visual Section with Image */}
+      <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="w-full md:w-1/2">
+              <div className="rounded-xl overflow-hidden shadow-xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1531297484001-80022131f5a1" 
+                  alt="Tecnologia e saúde"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+            <div className="w-full md:w-1/2 space-y-6">
+              <h2 className="text-3xl font-bold">Transforme dados em saúde</h2>
+              <p className="text-lg">
+                Nossa plataforma utiliza tecnologia avançada para transformar seus dados em 
+                insights valiosos que ajudam a monitorar e melhorar sua jornada hormonal.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <div className="bg-primary/20 p-2 rounded-full">
+                    <Calendar className="h-5 w-5 text-primary" />
+                  </div>
+                  <span>Acompanhamento visual do progresso</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="bg-primary/20 p-2 rounded-full">
+                    <Search className="h-5 w-5 text-primary" />
+                  </div>
+                  <span>Alertas e lembretes personalizados</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="bg-primary/20 p-2 rounded-full">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <span>Relatórios detalhados para compartilhar</span>
+                </li>
+              </ul>
+              <Link to="/register">
+                <Button size="lg" className="mt-4">
+                  Experimente Agora
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
