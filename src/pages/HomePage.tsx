@@ -1,9 +1,8 @@
-
 import { Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Search, User, Transgender } from "lucide-react";
+import { Calendar, Search, User, Heart } from "lucide-react";
 import { 
   Carousel,
   CarouselContent,
@@ -226,7 +225,7 @@ const HomePage = () => {
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-primary/20 p-2 rounded-full">
-                    <Transgender className="h-5 w-5 text-primary" />
+                    <Heart className="h-5 w-5 text-primary" />
                   </div>
                   <span>Relatórios detalhados para compartilhar</span>
                 </li>
