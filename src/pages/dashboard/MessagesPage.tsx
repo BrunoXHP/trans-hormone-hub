@@ -58,10 +58,10 @@ const MessagesPage = () => {
               {/* Sidebar with message list */}
               <div className="w-full md:w-1/3 border-r">
                 <CardHeader>
-                  <TabslistSide>
+                  <TabsList className="flex border-b w-full">
                     <TabsTrigger value="inbox" className="flex-1">Caixa de Entrada</TabsTrigger>
                     <TabsTrigger value="sent" className="flex-1">Enviados</TabsTrigger>
-                  </TabslistSide>
+                  </TabsList>
                 </CardHeader>
                 <CardContent className="p-0">
                   <TabsContent value="inbox" className="mt-0 h-[500px] border-0">
@@ -154,15 +154,6 @@ const MessagesPage = () => {
         </Card>
       </div>
     </DashboardLayout>
-  );
-};
-
-// Custom tabslist component for sidebar
-const TabslistSide = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="flex border-b w-full">
-      {children}
-    </div>
   );
 };
 
