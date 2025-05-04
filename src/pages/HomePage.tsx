@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Search, User } from "lucide-react";
+import { Calendar, Search, User, Transgender } from "lucide-react";
 import { 
   Carousel,
   CarouselContent,
@@ -88,8 +88,8 @@ const HomePage = () => {
                   <div className="p-1">
                     <div className="overflow-hidden rounded-xl">
                       <img 
-                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                        alt="Pessoa usando laptop para acessar informações de saúde"
+                        src="https://images.unsplash.com/photo-1578324510065-9afd82922c8d" 
+                        alt="Mãos segurando bandeira do orgulho trans"
                         className="w-full h-[400px] object-cover"
                       />
                     </div>
@@ -104,8 +104,8 @@ const HomePage = () => {
                   <div className="p-1">
                     <div className="overflow-hidden rounded-xl">
                       <img 
-                        src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
-                        alt="Tecnologia e saúde integradas"
+                        src="https://images.unsplash.com/photo-1567427361984-0cbe7396fc4c" 
+                        alt="Grupo de apoio à comunidade LGBTQ+"
                         className="w-full h-[400px] object-cover"
                       />
                     </div>
@@ -120,8 +120,8 @@ const HomePage = () => {
                   <div className="p-1">
                     <div className="overflow-hidden rounded-xl">
                       <img 
-                        src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" 
-                        alt="Pessoa em casa acessando a plataforma"
+                        src="https://images.unsplash.com/photo-1614073906819-62d71bd996bf" 
+                        alt="Pessoa utilizando aplicativo de saúde com símbolo trans"
                         className="w-full h-[400px] object-cover"
                       />
                     </div>
@@ -199,8 +199,8 @@ const HomePage = () => {
             <div className="w-full md:w-1/2">
               <div className="rounded-xl overflow-hidden shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1531297484001-80022131f5a1" 
-                  alt="Tecnologia e saúde"
+                  src="https://images.unsplash.com/photo-1586814196770-93c85392bc27" 
+                  alt="Pessoa não-binária utilizando aplicativo de saúde"
                   className="w-full h-auto"
                 />
               </div>
@@ -226,7 +226,7 @@ const HomePage = () => {
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="bg-primary/20 p-2 rounded-full">
-                    <User className="h-5 w-5 text-primary" />
+                    <Transgender className="h-5 w-5 text-primary" />
                   </div>
                   <span>Relatórios detalhados para compartilhar</span>
                 </li>
