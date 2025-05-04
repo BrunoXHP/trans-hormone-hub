@@ -25,7 +25,7 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1578324510065-9afd82922c8d" 
+                      src="https://images.unsplash.com/photo-1593765095631-6fec31256fbd" 
                       alt="Mãos segurando bandeira do orgulho trans"
                       className="w-full h-[400px] object-cover"
                     />
@@ -41,7 +41,7 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1567427361984-0cbe7396fc4c" 
+                      src="https://images.unsplash.com/photo-1629374029669-aab2f060553b" 
                       alt="Grupo de apoio à comunidade LGBTQ+"
                       className="w-full h-[400px] object-cover"
                     />
@@ -57,7 +57,7 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1614073906819-62d71bd996bf" 
+                      src="https://images.unsplash.com/photo-1643252494989-7738a8de392b" 
                       alt="Pessoa utilizando aplicativo de saúde com símbolo trans"
                       className="w-full h-[400px] object-cover"
                     />

@@ -11,7 +11,7 @@ const VisualSection = () => {
           <div className="w-full md:w-1/2">
             <div className="rounded-xl overflow-hidden shadow-xl">
               <img 
-                src="https://images.unsplash.com/photo-1586814196770-93c85392bc27" 
+                src="https://images.unsplash.com/photo-1643185539104-3622eb1f0ff6" 
                 alt="Pessoa não-binária utilizando aplicativo de saúde"
                 className="w-full h-auto"
               />
