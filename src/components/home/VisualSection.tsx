@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, Search, Heart, Users, Rainbow } from "lucide-react";
+import { Calendar, Search, Heart } from "lucide-react";
 
 const VisualSection = () => {
   return (
@@ -12,7 +12,7 @@ const VisualSection = () => {
             <div className="rounded-xl overflow-hidden shadow-xl">
               <img 
                 src="https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                alt="Comunidade LGBTQ+ em celebração com bandeiras coloridas"
+                alt="Grupo diverso em celebração com bandeiras"
                 className="w-full h-auto"
               />
             </div>
@@ -47,16 +47,6 @@ const VisualSection = () => {
               <Link to="/register">
                 <Button size="lg">
                   Experimente Agora
-                </Button>
-              </Link>
-              <Link to="/community">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="border-primary/30 hover:bg-primary/10"
-                >
-                  <Rainbow className="mr-1" />
-                  Comunidade LGBTQ+
                 </Button>
               </Link>
             </div>
