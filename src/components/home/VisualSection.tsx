@@ -11,8 +11,8 @@ const VisualSection = () => {
           <div className="w-full md:w-1/2">
             <div className="rounded-xl overflow-hidden shadow-xl">
               <img 
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                alt="Pessoa utilizando aplicativo de saúde em laptop"
+                src="https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                alt="Comunidade LGBTQ+ em celebração com bandeiras coloridas"
                 className="w-full h-auto"
               />
             </div>

@@ -25,8 +25,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81" 
-                      alt="Grupo de pessoas em frente a telas de vídeo em um ambiente inclusivo"
+                      src="https://images.unsplash.com/photo-1561806354-9ebcaae287c2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Grupo diverso celebrando o orgulho LGBTQ+ com bandeiras"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -41,8 +41,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                      alt="Pessoa usando computador para acessar informações de saúde"
+                      src="https://images.unsplash.com/photo-1572506634451-3deb970f3ba9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Bandeira do orgulho trans sendo segurada por pessoas no evento de celebração"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -57,8 +57,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" 
-                      alt="Pessoa trabalhando em ambiente de escritório com tecnologia"
+                      src="https://images.unsplash.com/photo-1573496358961-3c82861ab8f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" 
+                      alt="Grupo de pessoas diversas utilizando tecnologia para acesso à informação"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
