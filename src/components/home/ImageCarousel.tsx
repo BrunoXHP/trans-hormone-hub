@@ -25,8 +25,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1561806354-9ebcaae287c2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                      alt="Grupo diverso celebrando o orgulho LGBTQ+ com bandeiras"
+                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Pessoa usando laptop para acessar plataforma de saúde"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -41,8 +41,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1572506634451-3deb970f3ba9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                      alt="Bandeira do orgulho trans sendo segurada por pessoas no evento de celebração"
+                      src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Pessoa em consulta remota com profissional de saúde"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
