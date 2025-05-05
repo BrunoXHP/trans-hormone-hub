@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, Search, Heart } from "lucide-react";
+import { Calendar, Search, Heart, Users, Rainbow } from "lucide-react";
 
 const VisualSection = () => {
   return (
@@ -43,11 +43,23 @@ const VisualSection = () => {
                 <span>Relatórios detalhados para compartilhar</span>
               </li>
             </ul>
-            <Link to="/register">
-              <Button size="lg" className="mt-4">
-                Experimente Agora
-              </Button>
-            </Link>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <Link to="/register">
+                <Button size="lg">
+                  Experimente Agora
+                </Button>
+              </Link>
+              <Link to="/community">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-primary/30 hover:bg-primary/10"
+                >
+                  <Rainbow className="mr-1" />
+                  Comunidade LGBTQ+
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
