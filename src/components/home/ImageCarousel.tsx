@@ -25,8 +25,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1593765095631-6fec31256fbd" 
-                      alt="Mãos segurando bandeira do orgulho trans"
+                      src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81" 
+                      alt="Grupo de pessoas em frente a telas de vídeo em um ambiente inclusivo"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -41,8 +41,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1629374029669-aab2f060553b" 
-                      alt="Grupo de apoio à comunidade LGBTQ+"
+                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
+                      alt="Pessoa usando computador para acessar informações de saúde"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -57,8 +57,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1643252494989-7738a8de392b" 
-                      alt="Pessoa utilizando aplicativo de saúde com símbolo trans"
+                      src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" 
+                      alt="Pessoa trabalhando em ambiente de escritório com tecnologia"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
