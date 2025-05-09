@@ -2,6 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Calendar, Home, Mail, Search, Settings, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type SideNavItem = {
   title: string;
@@ -49,14 +50,18 @@ const navItems: SideNavItem[] = [
 
 const DashboardSidebar = () => {
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-sidebar border-r p-4 hidden md:block">
+    <aside className={cn(
+      "w-64 bg-sidebar border-r p-4 flex flex-col h-full",
+      isMobile ? "relative" : "fixed left-0 top-0"
+    )}>
       <Link to="/" className="flex items-center mb-8 mt-4">
         <span className="text-xl font-bold gradient-text">Transcare</span>
       </Link>
       
-      <nav className="space-y-1">
+      <nav className="space-y-1 flex-grow">
         {navItems.map((item) => (
           <Link
             key={item.href}

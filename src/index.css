@@ -105,3 +105,40 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Responsive utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Mobile friendly calendar fixes */
+@media (max-width: 640px) {
+  .rdp {
+    --rdp-cell-size: 36px !important;
+    margin: 0 !important;
+  }
+  
+  .rdp-month {
+    width: 100% !important;
+  }
+  
+  .rdp-table {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

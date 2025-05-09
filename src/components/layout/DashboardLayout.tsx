@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,17 +15,20 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [username, setUsername] = useState("Usuário");
+  const isMobile = useIsMobile();
   
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Desktop sidebar */}
-      <DashboardSidebar />
+      {/* Desktop sidebar - only visible on desktop */}
+      <div className="hidden md:block">
+        <DashboardSidebar />
+      </div>
       
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1 md:ml-64 w-full">
         {/* Mobile header */}
         <header className="flex items-center justify-between p-4 border-b md:hidden">
           <Link to="/" className="flex items-center">
-            <span className="text-xl font-bold gradient-text">TransFormAção</span>
+            <span className="text-xl font-bold gradient-text">Transcare</span>
           </Link>
           
           <Sheet>
@@ -53,7 +57,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </header>
         
-        <main className="p-4 md:p-6">
+        <main className="p-4 md:p-6 overflow-x-hidden">
           {children}
         </main>
       </div>

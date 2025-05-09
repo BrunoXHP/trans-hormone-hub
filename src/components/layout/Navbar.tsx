@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <nav className="bg-background/95 backdrop-blur-sm fixed w-full z-50 border-b shadow-sm">
@@ -13,7 +15,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold gradient-text">Transcare</span>
+              <span className="text-xl sm:text-2xl font-bold gradient-text">Transcare</span>
             </Link>
           </div>
           
@@ -91,7 +93,7 @@ const Navbar = () => {
             </Link>
             <Link 
               to="/register" 
-              className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground"
+              className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground p-2 rounded-md"
               onClick={() => setIsMenuOpen(false)}
             >
               Cadastrar
