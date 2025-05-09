@@ -1,18 +1,20 @@
-
-import { useState } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Mail, User } from "lucide-react";
+import { Calendar, Mail, User, Pencil } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const ProfilePage = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileData, setProfileData] = useState({
     name: "Ana Silva",
     email: "ana.silva@email.com",
@@ -20,6 +22,7 @@ const ProfilePage = () => {
     birthdate: "1990-05-15",
     startDate: "2022-11-10",
     currentTherapy: "Estradiol + Espironolactona",
+    avatar: "",
   });
 
   const handleSaveProfile = () => {
@@ -27,6 +30,30 @@ const ProfilePage = () => {
     toast({
       title: "Perfil atualizado",
       description: "Suas informações foram salvas com sucesso.",
+    });
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Create a URL for the selected image file
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setProfileData({...profileData, avatar: reader.result});
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Show success toast
+    toast({
+      title: "Avatar atualizado",
+      description: "Sua foto de perfil foi atualizada com sucesso.",
     });
   };
 
@@ -65,14 +92,55 @@ const ProfilePage = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-center mb-8">
                     <div className="relative">
-                      <div className="w-24 h-24 rounded-full bg-primary/20 text-primary flex items-center justify-center text-2xl font-bold">
-                        {profileData.name.charAt(0).toUpperCase()}
-                      </div>
-                      {isEditing && (
-                        <Button variant="secondary" size="sm" className="absolute -bottom-2 -right-2">
-                          Alterar
-                        </Button>
-                      )}
+                      <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
+                        {profileData.avatar ? (
+                          <AvatarImage src={profileData.avatar} alt={profileData.name} />
+                        ) : (
+                          <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+                            {profileData.name.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button 
+                            variant="secondary" 
+                            size="sm" 
+                            className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 p-0"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-52 p-2">
+                          <div className="space-y-2">
+                            <Button 
+                              onClick={handleAvatarClick} 
+                              variant="outline" 
+                              className="w-full"
+                            >
+                              Escolher imagem
+                            </Button>
+                            {profileData.avatar && (
+                              <Button 
+                                onClick={() => setProfileData({...profileData, avatar: ""})} 
+                                variant="outline" 
+                                className="w-full"
+                              >
+                                Remover imagem
+                              </Button>
+                            )}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileChange} 
+                        accept="image/*"
+                        className="hidden" 
+                      />
                     </div>
                   </div>
 

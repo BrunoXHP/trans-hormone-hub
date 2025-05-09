@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -43,9 +44,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <div className="flex items-center">
             <span className="mr-2 text-sm font-medium">Olá, {username}</span>
             <Link to="/dashboard/profile">
-              <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center">
-                {username.charAt(0).toUpperCase()}
-              </div>
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary/20 text-primary">
+                  {username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             </Link>
           </div>
         </header>
