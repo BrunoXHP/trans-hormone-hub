@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, PlusCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,27 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/components/ui/sonner";
 
 // Tipos para os eventos da agenda
 interface AppointmentEvent {
@@ -22,8 +43,21 @@ interface AppointmentEvent {
   notes?: string;
 }
 
+// Schema para o formulário de adição de evento
+const eventFormSchema = z.object({
+  title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres" }),
+  date: z.date({ required_error: "A data é obrigatória" }),
+  time: z.string().optional(),
+  type: z.enum(["consulta", "exame", "medicação", "outro"]),
+  location: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+type EventFormValues = z.infer<typeof eventFormSchema>;
+
 const CalendarPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [events, setEvents] = useState<AppointmentEvent[]>([
     {
       id: "1",
@@ -53,6 +87,54 @@ const CalendarPage = () => {
     },
   ]);
 
+  // Configuração do formulário com React Hook Form
+  const form = useForm<EventFormValues>({
+    resolver: zodResolver(eventFormSchema),
+    defaultValues: {
+      title: "",
+      date: new Date(),
+      time: "",
+      type: "outro",
+      location: "",
+      notes: "",
+    },
+  });
+
+  // Função para tratar a submissão do formulário
+  const onSubmit = (values: EventFormValues) => {
+    // Criar novo evento
+    const newEvent: AppointmentEvent = {
+      id: crypto.randomUUID(),
+      title: values.title,
+      date: values.date,
+      time: values.time,
+      type: values.type,
+      location: values.location,
+      notes: values.notes,
+    };
+
+    // Adicionar o novo evento à lista
+    setEvents([...events, newEvent]);
+    
+    // Fechar o diálogo e mostrar uma notificação de sucesso
+    setIsAddEventOpen(false);
+    form.reset();
+    toast.success("Evento adicionado com sucesso!");
+  };
+
+  // Função para abrir o diálogo de adição de evento
+  const openAddEventDialog = () => {
+    form.reset({
+      title: "",
+      date: date || new Date(),
+      time: "",
+      type: "outro",
+      location: "",
+      notes: "",
+    });
+    setIsAddEventOpen(true);
+  };
+
   // Filtrar eventos pela data selecionada
   const selectedDateEvents = events.filter(
     (event) => date && event.date.toDateString() === date.toDateString()
@@ -61,7 +143,13 @@ const CalendarPage = () => {
   return (
     <DashboardLayout>
       <div className="w-full max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Minha Agenda</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Minha Agenda</h1>
+          <Button onClick={openAddEventDialog}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Adicionar Evento
+          </Button>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Calendário */}
@@ -95,23 +183,15 @@ const CalendarPage = () => {
                       : `${selectedDateEvents.length} evento(s) agendado(s)`}
                   </CardDescription>
                 </div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-1">
-                      <CalendarIcon className="h-4 w-4" /> Novo
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 p-0" align="end">
-                    <div className="grid gap-4 p-4">
-                      <div className="grid gap-2">
-                        <h4 className="font-medium leading-none">Adicionar Evento</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Funcionalidade em desenvolvimento
-                        </p>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <Button 
+                  onClick={openAddEventDialog} 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-1"
+                >
+                  <CalendarIcon className="h-4 w-4" /> 
+                  Novo
+                </Button>
               </div>
             </CardHeader>
             <CardContent>
@@ -157,6 +237,13 @@ const CalendarPage = () => {
                   <p className="text-muted-foreground">
                     Nenhum evento agendado para esta data
                   </p>
+                  <Button 
+                    className="mt-4" 
+                    variant="outline" 
+                    onClick={openAddEventDialog}
+                  >
+                    Adicionar evento
+                  </Button>
                 </div>
               )}
             </CardContent>
@@ -218,6 +305,151 @@ const CalendarPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Diálogo de adição de evento */}
+      <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar novo evento</DialogTitle>
+            <DialogDescription>
+              Preencha os campos para criar um novo evento na sua agenda.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Título</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Consulta médica" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Data</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "dd/MM/yyyy")
+                              ) : (
+                                <span>Selecione uma data</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            initialFocus
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Horário</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tipo</FormLabel>
+                    <FormControl>
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                        {...field}
+                      >
+                        <option value="consulta">Consulta</option>
+                        <option value="exame">Exame</option>
+                        <option value="medicação">Medicação</option>
+                        <option value="outro">Outro</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Local</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Hospital Central" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Observações</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Levar exames" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsAddEventOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Adicionar evento
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
