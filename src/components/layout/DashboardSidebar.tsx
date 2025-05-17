@@ -54,11 +54,11 @@ const DashboardSidebar = () => {
 
   return (
     <aside className={cn(
-      "w-64 bg-sidebar border-r p-4 flex flex-col h-full",
+      "w-64 bg-white/80 backdrop-blur-sm border-r p-4 flex flex-col h-full",
       isMobile ? "relative" : "fixed left-0 top-0"
     )}>
       <Link to="/" className="flex items-center mb-8 mt-4">
-        <span className="text-xl font-bold gradient-text">Transcare</span>
+        <span className="text-xl font-bold gradient-trans">Transcare</span>
       </Link>
       
       <nav className="space-y-1 flex-grow">
@@ -69,8 +69,8 @@ const DashboardSidebar = () => {
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
               location.pathname === item.href
-                ? "bg-primary text-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent"
+                ? "bg-gradient-to-r from-trans-blue to-trans-pink text-white"
+                : "text-sidebar-foreground hover:bg-gradient-to-r hover:from-trans-blue/10 hover:to-trans-pink/10"
             )}
           >
             <item.icon size={18} />

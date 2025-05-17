@@ -66,11 +66,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom trans color theme
+				// Trans flag colors
 				trans: {
-					light: '#E9D8FD',
-					DEFAULT: '#9B87F5',
-					dark: '#7E69AB'
+					light: '#FFDEE2', // light pink
+					DEFAULT: '#5BCEFA', // light blue
+					dark: '#5BCEFA', // light blue darker shade
+					pink: {
+						light: '#FFDEE2', // light pink
+						DEFAULT: '#F6A8B8', // pink from trans flag
+						dark: '#E57385', // darker pink
+					},
+					blue: {
+						light: '#D3E4FD', // very light blue
+						DEFAULT: '#5BCEFA', // light blue from trans flag
+						dark: '#419DD9', // darker blue
+					},
+					white: '#FFFFFF', // white from trans flag
 				}
 			},
 			borderRadius: {
@@ -107,7 +118,8 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-hero': 'linear-gradient(to right, #9B87F5, #D946EF)',
+				'gradient-hero': 'linear-gradient(to right, #5BCEFA, #F6A8B8)',
+				'gradient-trans': 'linear-gradient(to right, #5BCEFA, #F6A8B8, #FFFFFF, #F6A8B8, #5BCEFA)',
 			}
 		}
 	},
