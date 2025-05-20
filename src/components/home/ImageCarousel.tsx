@@ -25,8 +25,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1561867433-c5fca91383f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                      alt="Bandeira do orgulho trans em primeiro plano"
+                      src="https://images.pexels.com/photos/2565222/pexels-photo-2565222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                      alt="Bandeira do orgulho trans"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -41,7 +41,7 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      src="https://images.pexels.com/photos/5443336/pexels-photo-5443336.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
                       alt="Bandeiras LGBTQ+ em evento de celebração do orgulho"
                       className="w-full h-[400px] object-cover"
                     />
@@ -57,7 +57,7 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1602230068527-57257870a8d6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" 
+                      src="https://images.pexels.com/photos/15024337/pexels-photo-15024337/free-photo-of-grupo-de-pessoas-segurando-a-bandeira-arco-iris.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
                       alt="Arco-íris simbolizando a diversidade LGBTQ+"
                       className="w-full h-[400px] object-cover"
                     />
