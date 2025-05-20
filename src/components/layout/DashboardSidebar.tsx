@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Calendar, Home, Mail, Search, Settings, User, Users } from "lucide-react";
+import { Calendar, Home, Search, Settings, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -30,11 +30,6 @@ const navItems: SideNavItem[] = [
     title: "Informações",
     href: "/dashboard/info",
     icon: Search,
-  },
-  {
-    title: "Mensagens",
-    href: "/dashboard/messages",
-    icon: Mail,
   },
   {
     title: "Comunidade",

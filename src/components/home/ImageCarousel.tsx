@@ -25,14 +25,14 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                      alt="Pessoa usando laptop para acessar plataforma de saúde"
+                      src="https://images.unsplash.com/photo-1561867433-c5fca91383f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Bandeira do orgulho trans em primeiro plano"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Acesso a recursos personalizados</h3>
-                    <p className="text-muted-foreground">Informações precisas e adaptadas à sua jornada</p>
+                    <h3 className="text-lg font-medium">Visibilidade Trans</h3>
+                    <p className="text-muted-foreground">Promovendo a conscientização e aceitação</p>
                   </div>
                 </div>
               </CarouselItem>
@@ -41,14 +41,14 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
-                      alt="Pessoa em consulta remota com profissional de saúde"
+                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80" 
+                      alt="Bandeiras LGBTQ+ em evento de celebração do orgulho"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Tecnologia a serviço da sua saúde</h3>
-                    <p className="text-muted-foreground">Ferramentas digitais para acompanhamento hormonal</p>
+                    <h3 className="text-lg font-medium">Comunidade e Pertencimento</h3>
+                    <p className="text-muted-foreground">Fortalecendo laços e criando suporte</p>
                   </div>
                 </div>
               </CarouselItem>
@@ -57,14 +57,14 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.unsplash.com/photo-1573496358961-3c82861ab8f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" 
-                      alt="Grupo de pessoas diversas utilizando tecnologia para acesso à informação"
+                      src="https://images.unsplash.com/photo-1602230068527-57257870a8d6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" 
+                      alt="Arco-íris simbolizando a diversidade LGBTQ+"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Acompanhamento remoto</h3>
-                    <p className="text-muted-foreground">Acesse suas informações de qualquer lugar</p>
+                    <h3 className="text-lg font-medium">Celebrando a Diversidade</h3>
+                    <p className="text-muted-foreground">Honrando as múltiplas identidades e expressões</p>
                   </div>
                 </div>
               </CarouselItem>
