@@ -25,8 +25,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.pexels.com/photos/2565222/pexels-photo-2565222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                      alt="Bandeira do orgulho trans"
+                      src="/lovable-uploads/1c5cfe49-0ccd-4d36-95db-623bf758516c.png" 
+                      alt="Manifestação com bandeira trans em frente a um prédio histórico"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -41,8 +41,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.pexels.com/photos/5443336/pexels-photo-5443336.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                      alt="Bandeiras LGBTQ+ em evento de celebração do orgulho"
+                      src="/lovable-uploads/359243f4-c588-474a-92d6-3fb0f6b2ea2d.png" 
+                      alt="Pessoa com cabelo colorido segurando bandeira trans"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
@@ -57,8 +57,8 @@ const ImageCarousel = () => {
                 <div className="p-1">
                   <div className="overflow-hidden rounded-xl">
                     <img 
-                      src="https://images.pexels.com/photos/15024337/pexels-photo-15024337/free-photo-of-grupo-de-pessoas-segurando-a-bandeira-arco-iris.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                      alt="Arco-íris simbolizando a diversidade LGBTQ+"
+                      src="/lovable-uploads/64279e80-7b34-4a89-8a73-6de839f5a973.png" 
+                      alt="Bandeira trans sendo segurada durante evento"
                       className="w-full h-[400px] object-cover"
                     />
                   </div>
