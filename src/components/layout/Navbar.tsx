@@ -25,6 +25,9 @@ const Navbar = () => {
               <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
                 Início
               </Link>
+              <Link to="/about" className="px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
+                Sobre Nós
+              </Link>
               <Link to="/info" className="px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
                 Informações
               </Link>
@@ -69,6 +72,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Início
+            </Link>
+            <Link 
+              to="/about"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Sobre Nós
             </Link>
             <Link 
               to="/info" 

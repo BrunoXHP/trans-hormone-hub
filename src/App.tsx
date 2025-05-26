@@ -11,6 +11,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import InfoPage from "./pages/InfoPage";
 import FaqPage from "./pages/FaqPage";
+import AboutPage from "./pages/AboutPage";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import ProfilePage from "./pages/dashboard/ProfilePage";
 import CalendarPage from "./pages/dashboard/CalendarPage";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/info" element={<InfoPage />} />
             <Route path="/faq" element={<FaqPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/dashboard/profile" element={<ProfilePage />} />
             <Route path="/dashboard/calendar" element={<CalendarPage />} />
