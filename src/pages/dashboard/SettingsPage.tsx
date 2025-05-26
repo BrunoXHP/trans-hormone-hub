@@ -7,87 +7,34 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useSettings } from "@/hooks/useSettings";
 
 const SettingsPage = () => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const {
+    accountSettings,
+    notifications,
+    privacySettings,
+    saveAccountSettings,
+    toggleNotification,
+    togglePrivacy,
+    setAccountSettings,
+  } = useSettings();
   
-  // Account settings
-  const [accountSettings, setAccountSettings] = useState({
-    email: "usuario@exemplo.com",
-    name: "Usuário Exemplo",
-    phone: "(11) 98765-4321",
-  });
-
-  // Notification preferences
-  const [notifications, setNotifications] = useState({
-    email: true,
-    sms: false,
-    appointments: true,
-    reminders: true,
-    updates: false,
-  });
-
-  // Privacy settings
-  const [privacySettings, setPrivacySettings] = useState({
-    shareData: false,
-    allowResearch: true,
-    profileVisibility: "private",
-  });
-
-  // Theme setting
-  const [theme, setTheme] = useState("system");
+  const [loading, setLoading] = useState(false);
 
   const handleAccountSave = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    saveAccountSettings(accountSettings).finally(() => {
       setLoading(false);
-      toast({
-        title: "Configurações salvas",
-        description: "Suas configurações de conta foram atualizadas com sucesso.",
-      });
-    }, 1000);
-  };
-
-  const handleNotificationToggle = (key: keyof typeof notifications) => {
-    setNotifications(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-    
-    toast({
-      title: "Preferências atualizadas",
-      description: "Suas preferências de notificação foram salvas.",
     });
   };
 
-  const handlePrivacyToggle = (key: keyof typeof privacySettings) => {
-    if (typeof privacySettings[key] === "boolean") {
-      setPrivacySettings(prev => ({
-        ...prev,
-        [key]: !prev[key]
-      }));
-      
-      toast({
-        title: "Configurações de privacidade atualizadas",
-        description: "Suas preferências de privacidade foram salvas.",
-      });
-    }
-  };
-
-  const handleThemeChange = (newTheme: string) => {
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
-    
-    toast({
-      title: "Tema alterado",
-      description: `O tema foi alterado para ${
-        newTheme === "dark" ? "escuro" : newTheme === "light" ? "claro" : "sistema"
-      }.`,
-    });
   };
 
   return (
@@ -166,7 +113,7 @@ const SettingsPage = () => {
                   <Switch
                     id="email-notifications"
                     checked={notifications.email}
-                    onCheckedChange={() => handleNotificationToggle("email")}
+                    onCheckedChange={() => toggleNotification("email")}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -179,7 +126,7 @@ const SettingsPage = () => {
                   <Switch
                     id="sms-notifications"
                     checked={notifications.sms}
-                    onCheckedChange={() => handleNotificationToggle("sms")}
+                    onCheckedChange={() => toggleNotification("sms")}
                   />
                 </div>
               </div>
@@ -198,7 +145,7 @@ const SettingsPage = () => {
                   <Switch
                     id="appointment-reminders"
                     checked={notifications.appointments}
-                    onCheckedChange={() => handleNotificationToggle("appointments")}
+                    onCheckedChange={() => toggleNotification("appointments")}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -211,7 +158,7 @@ const SettingsPage = () => {
                   <Switch
                     id="medication-reminders"
                     checked={notifications.reminders}
-                    onCheckedChange={() => handleNotificationToggle("reminders")}
+                    onCheckedChange={() => toggleNotification("reminders")}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -224,7 +171,7 @@ const SettingsPage = () => {
                   <Switch
                     id="system-updates"
                     checked={notifications.updates}
-                    onCheckedChange={() => handleNotificationToggle("updates")}
+                    onCheckedChange={() => toggleNotification("updates")}
                   />
                 </div>
               </div>
@@ -252,7 +199,7 @@ const SettingsPage = () => {
                   <Switch
                     id="data-sharing"
                     checked={privacySettings.shareData}
-                    onCheckedChange={() => handlePrivacyToggle("shareData")}
+                    onCheckedChange={() => togglePrivacy("shareData")}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -265,7 +212,7 @@ const SettingsPage = () => {
                   <Switch
                     id="research"
                     checked={privacySettings.allowResearch}
-                    onCheckedChange={() => handlePrivacyToggle("allowResearch")}
+                    onCheckedChange={() => togglePrivacy("allowResearch")}
                   />
                 </div>
               </div>

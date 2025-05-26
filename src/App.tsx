@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -26,28 +27,30 @@ const queryClient = new QueryClient();
 const App = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/info" element={<InfoPage />} />
-            <Route path="/faq" element={<FaqPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/dashboard" element={<DashboardHome />} />
-            <Route path="/dashboard/profile" element={<ProfilePage />} />
-            <Route path="/dashboard/calendar" element={<CalendarPage />} />
-            <Route path="/dashboard/info" element={<DashboardInfoPage />} />
-            <Route path="/dashboard/community" element={<CommunityPage />} />
-            <Route path="/dashboard/settings" element={<SettingsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/info" element={<InfoPage />} />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/dashboard" element={<DashboardHome />} />
+              <Route path="/dashboard/profile" element={<ProfilePage />} />
+              <Route path="/dashboard/calendar" element={<CalendarPage />} />
+              <Route path="/dashboard/info" element={<DashboardInfoPage />} />
+              <Route path="/dashboard/community" element={<CommunityPage />} />
+              <Route path="/dashboard/settings" element={<SettingsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
