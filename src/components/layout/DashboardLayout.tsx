@@ -14,6 +14,9 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  console.log("DashboardLayout is rendering");
+  console.log("Children received:", children);
+  
   const [username, setUsername] = useState("Usuário");
   const isMobile = useIsMobile();
   
@@ -58,6 +61,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </header>
         
         <main className="p-4 md:p-6 overflow-x-hidden">
+          {console.log("Rendering main content area")}
           {children}
         </main>
       </div>
