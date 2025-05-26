@@ -14,9 +14,6 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  console.log("DashboardLayout is rendering");
-  console.log("Children received:", children);
-  
   const [username, setUsername] = useState("Usuário");
   const isMobile = useIsMobile();
   

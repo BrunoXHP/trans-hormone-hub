@@ -6,8 +6,6 @@ import { Calendar, Search, User, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const DashboardHome = () => {
-  console.log("DashboardHome component is rendering");
-  
   return (
     <DashboardLayout>
       <div className="space-y-8">

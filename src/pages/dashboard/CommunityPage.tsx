@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -5,14 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, UserRound, Heart, Calendar, Users, CalendarDays, Share, Plus, X } from "lucide-react";
+import { MessageSquare, UserRound, Heart, Calendar, Users, CalendarDays, Share } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 
 interface Post {
   id: string;
@@ -32,7 +29,6 @@ interface Group {
   members: number;
   category: string;
   image: string;
-  joined: boolean;
 }
 
 interface Event {
@@ -45,25 +41,12 @@ interface Event {
   organizer: string;
   attendees: number;
   image: string;
-  attending: boolean;
 }
 
 const CommunityPage = () => {
   const [newPost, setNewPost] = useState("");
   const [searchGroup, setSearchGroup] = useState("");
   const [searchEvent, setSearchEvent] = useState("");
-  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [newGroupDescription, setNewGroupDescription] = useState("");
-  const [newGroupCategory, setNewGroupCategory] = useState("");
-  const [newEventTitle, setNewEventTitle] = useState("");
-  const [newEventDescription, setNewEventDescription] = useState("");
-  const [newEventDate, setNewEventDate] = useState("");
-  const [newEventLocation, setNewEventLocation] = useState("");
-  const [newEventCategory, setNewEventCategory] = useState("");
-  const { toast } = useToast();
-
   const [posts, setPosts] = useState<Post[]>([
     {
       id: "1",
@@ -104,8 +87,7 @@ const CommunityPage = () => {
       description: "Grupo dedicado ao compartilhamento de experiências durante a transição e suporte mútuo entre pessoas trans.",
       members: 156,
       category: "Suporte",
-      image: "AT",
-      joined: false
+      image: "AT"
     },
     {
       id: "2",
@@ -113,8 +95,7 @@ const CommunityPage = () => {
       description: "Grupo focado em discussões sobre direitos legais, retificação de documentos e combate à discriminação.",
       members: 89,
       category: "Direitos",
-      image: "DT",
-      joined: true
+      image: "DT"
     },
     {
       id: "3",
@@ -122,8 +103,7 @@ const CommunityPage = () => {
       description: "Compartilhamento de informações sobre hormonização, procedimentos de afirmação de gênero e saúde mental.",
       members: 112,
       category: "Saúde",
-      image: "ST",
-      joined: false
+      image: "ST"
     },
     {
       id: "4",
@@ -131,8 +111,7 @@ const CommunityPage = () => {
       description: "Espaço para artistas trans compartilharem obras e discutirem representatividade nas artes.",
       members: 74,
       category: "Arte",
-      image: "AC",
-      joined: true
+      image: "AC"
     }
   ]);
   
@@ -146,8 +125,7 @@ const CommunityPage = () => {
       category: "Presencial",
       organizer: "Associação TransVida",
       attendees: 87,
-      image: "EC",
-      attending: false
+      image: "EC"
     },
     {
       id: "2",
@@ -158,8 +136,7 @@ const CommunityPage = () => {
       category: "Online",
       organizer: "Instituto TransFormação",
       attendees: 124,
-      image: "WO",
-      attending: true
+      image: "WO"
     },
     {
       id: "3",
@@ -170,8 +147,7 @@ const CommunityPage = () => {
       category: "Presencial",
       organizer: "Coletivo TransReal",
       attendees: 32,
-      image: "GC",
-      attending: false
+      image: "GC"
     }
   ]);
 
@@ -206,127 +182,6 @@ const CommunityPage = () => {
         return post;
       })
     );
-  };
-
-  const handleJoinGroup = (groupId: string) => {
-    setGroups(groups.map(group => {
-      if (group.id === groupId) {
-        const newJoined = !group.joined;
-        toast({
-          title: newJoined ? "Grupo participado!" : "Saiu do grupo",
-          description: newJoined ? `Você agora faz parte do grupo "${group.name}"` : `Você saiu do grupo "${group.name}"`
-        });
-        return {
-          ...group,
-          joined: newJoined,
-          members: newJoined ? group.members + 1 : group.members - 1
-        };
-      }
-      return group;
-    }));
-  };
-
-  const handleShareGroup = (groupName: string) => {
-    navigator.clipboard.writeText(`Confira este grupo: ${groupName} - Transcare Community`);
-    toast({
-      title: "Link copiado!",
-      description: "O link do grupo foi copiado para a área de transferência"
-    });
-  };
-
-  const handleAttendEvent = (eventId: string) => {
-    setEvents(events.map(event => {
-      if (event.id === eventId) {
-        const newAttending = !event.attending;
-        toast({
-          title: newAttending ? "Participação confirmada!" : "Participação cancelada",
-          description: newAttending ? `Você confirmou presença no evento "${event.title}"` : `Você cancelou sua participação no evento "${event.title}"`
-        });
-        return {
-          ...event,
-          attending: newAttending,
-          attendees: newAttending ? event.attendees + 1 : event.attendees - 1
-        };
-      }
-      return event;
-    }));
-  };
-
-  const handleShareEvent = (eventTitle: string) => {
-    navigator.clipboard.writeText(`Confira este evento: ${eventTitle} - Transcare Community`);
-    toast({
-      title: "Link copiado!",
-      description: "O link do evento foi copiado para a área de transferência"
-    });
-  };
-
-  const handleCreateGroup = () => {
-    if (!newGroupName.trim() || !newGroupDescription.trim() || !newGroupCategory) {
-      toast({
-        title: "Erro",
-        description: "Por favor, preencha todos os campos",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newGroup: Group = {
-      id: Date.now().toString(),
-      name: newGroupName,
-      description: newGroupDescription,
-      members: 1,
-      category: newGroupCategory,
-      image: newGroupName.substring(0, 2).toUpperCase(),
-      joined: true
-    };
-
-    setGroups([newGroup, ...groups]);
-    setNewGroupName("");
-    setNewGroupDescription("");
-    setNewGroupCategory("");
-    setIsCreateGroupOpen(false);
-    
-    toast({
-      title: "Grupo criado!",
-      description: `O grupo "${newGroupName}" foi criado com sucesso`
-    });
-  };
-
-  const handleCreateEvent = () => {
-    if (!newEventTitle.trim() || !newEventDescription.trim() || !newEventDate || !newEventLocation.trim() || !newEventCategory) {
-      toast({
-        title: "Erro",
-        description: "Por favor, preencha todos os campos",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newEvent: Event = {
-      id: Date.now().toString(),
-      title: newEventTitle,
-      description: newEventDescription,
-      date: new Date(newEventDate),
-      location: newEventLocation,
-      category: newEventCategory,
-      organizer: "Você",
-      attendees: 1,
-      image: newEventTitle.substring(0, 2).toUpperCase(),
-      attending: true
-    };
-
-    setEvents([newEvent, ...events]);
-    setNewEventTitle("");
-    setNewEventDescription("");
-    setNewEventDate("");
-    setNewEventLocation("");
-    setNewEventCategory("");
-    setIsCreateEventOpen(false);
-    
-    toast({
-      title: "Evento criado!",
-      description: `O evento "${newEventTitle}" foi criado com sucesso`
-    });
   };
 
   const filteredGroups = searchGroup
@@ -462,21 +317,11 @@ const CommunityPage = () => {
                         </div>
                       </div>
                       <CardFooter className="bg-muted/30 py-2 px-4 flex justify-between">
-                        <Button 
-                          variant={group.joined ? "outline" : "default"} 
-                          size="sm" 
-                          className="text-xs"
-                          onClick={() => handleJoinGroup(group.id)}
-                        >
+                        <Button variant="ghost" size="sm" className="text-xs">
                           <Users size={14} className="mr-1" />
-                          {group.joined ? "Sair" : "Participar"}
+                          Participar
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-xs"
-                          onClick={() => handleShareGroup(group.name)}
-                        >
+                        <Button variant="ghost" size="sm" className="text-xs">
                           <Share size={14} className="mr-1" />
                           Compartilhar
                         </Button>
@@ -486,63 +331,10 @@ const CommunityPage = () => {
                 </div>
                 
                 <div className="flex justify-center mt-6">
-                  <Dialog open={isCreateGroupOpen} onOpenChange={setIsCreateGroupOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="w-full max-w-xs">
-                        <Plus size={18} className="mr-2" />
-                        Criar um novo grupo
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Criar novo grupo</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="groupName">Nome do grupo</Label>
-                          <Input
-                            id="groupName"
-                            placeholder="Digite o nome do grupo"
-                            value={newGroupName}
-                            onChange={(e) => setNewGroupName(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="groupDescription">Descrição</Label>
-                          <Textarea
-                            id="groupDescription"
-                            placeholder="Descreva o propósito do grupo"
-                            value={newGroupDescription}
-                            onChange={(e) => setNewGroupDescription(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="groupCategory">Categoria</Label>
-                          <Select value={newGroupCategory} onValueChange={setNewGroupCategory}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione uma categoria" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Suporte">Suporte</SelectItem>
-                              <SelectItem value="Direitos">Direitos</SelectItem>
-                              <SelectItem value="Saúde">Saúde</SelectItem>
-                              <SelectItem value="Arte">Arte</SelectItem>
-                              <SelectItem value="Educação">Educação</SelectItem>
-                              <SelectItem value="Trabalho">Trabalho</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setIsCreateGroupOpen(false)}>
-                          Cancelar
-                        </Button>
-                        <Button onClick={handleCreateGroup}>
-                          Criar grupo
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <Button className="w-full max-w-xs">
+                    <Users size={18} className="mr-2" />
+                    Criar um novo grupo
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -592,27 +384,12 @@ const CommunityPage = () => {
                               
                               <p className="text-sm mt-2">{event.description}</p>
                               
-                              <div className="flex items-center text-xs text-muted-foreground mt-2">
-                                <Users size={14} className="mr-1" />
-                                <span>{event.attendees} participantes</span>
-                              </div>
-                              
                               <div className="mt-4 flex flex-wrap gap-2">
-                                <Button 
-                                  size="sm" 
-                                  className="text-xs"
-                                  variant={event.attending ? "outline" : "default"}
-                                  onClick={() => handleAttendEvent(event.id)}
-                                >
+                                <Button size="sm" className="text-xs">
                                   <Calendar size={14} className="mr-1" />
-                                  {event.attending ? "Cancelar participação" : "Participar"}
+                                  Participar
                                 </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => handleShareEvent(event.title)}
-                                >
+                                <Button variant="outline" size="sm" className="text-xs">
                                   <Share size={14} className="mr-1" />
                                   Compartilhar
                                 </Button>
@@ -626,78 +403,10 @@ const CommunityPage = () => {
                 </div>
                 
                 <div className="flex justify-center mt-6">
-                  <Dialog open={isCreateEventOpen} onOpenChange={setIsCreateEventOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="w-full max-w-xs">
-                        <Plus size={18} className="mr-2" />
-                        Criar novo evento
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>Criar novo evento</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="eventTitle">Título do evento</Label>
-                          <Input
-                            id="eventTitle"
-                            placeholder="Digite o título do evento"
-                            value={newEventTitle}
-                            onChange={(e) => setNewEventTitle(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="eventDescription">Descrição</Label>
-                          <Textarea
-                            id="eventDescription"
-                            placeholder="Descreva o evento"
-                            value={newEventDescription}
-                            onChange={(e) => setNewEventDescription(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="eventDate">Data e hora</Label>
-                          <Input
-                            id="eventDate"
-                            type="datetime-local"
-                            value={newEventDate}
-                            onChange={(e) => setNewEventDate(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="eventLocation">Local</Label>
-                          <Input
-                            id="eventLocation"
-                            placeholder="Local do evento"
-                            value={newEventLocation}
-                            onChange={(e) => setNewEventLocation(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="eventCategory">Categoria</Label>
-                          <Select value={newEventCategory} onValueChange={setNewEventCategory}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione uma categoria" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Presencial">Presencial</SelectItem>
-                              <SelectItem value="Online">Online</SelectItem>
-                              <SelectItem value="Híbrido">Híbrido</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setIsCreateEventOpen(false)}>
-                          Cancelar
-                        </Button>
-                        <Button onClick={handleCreateEvent}>
-                          Criar evento
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <Button className="w-full max-w-xs">
+                    <Calendar size={18} className="mr-2" />
+                    Criar novo evento
+                  </Button>
                 </div>
               </CardContent>
             </Card>

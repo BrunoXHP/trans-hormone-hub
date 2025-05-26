@@ -21,14 +21,7 @@ import SettingsPage from "./pages/dashboard/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 // Criar o cliente de consultas fora do componente para evitar recriações
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutos
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const App = () => (
   <React.StrictMode>
@@ -38,7 +31,6 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            {/* Rotas públicas */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -46,19 +38,12 @@ const App = () => (
             <Route path="/info" element={<InfoPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/about" element={<AboutPage />} />
-            
-            {/* Rotas do dashboard */}
             <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/dashboard/profile" element={<ProfilePage />} />
             <Route path="/dashboard/calendar" element={<CalendarPage />} />
             <Route path="/dashboard/info" element={<DashboardInfoPage />} />
             <Route path="/dashboard/community" element={<CommunityPage />} />
             <Route path="/dashboard/settings" element={<SettingsPage />} />
-            
-            {/* Redirect para dashboard se acessar /dashboard/ */}
-            <Route path="/dashboard/" element={<Navigate to="/dashboard" replace />} />
-            
-            {/* Página 404 para todas as outras rotas */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
