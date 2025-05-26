@@ -61,7 +61,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </header>
         
         <main className="p-4 md:p-6 overflow-x-hidden">
-          {console.log("Rendering main content area")}
           {children}
         </main>
       </div>
