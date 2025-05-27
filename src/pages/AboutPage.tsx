@@ -1,4 +1,3 @@
-
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Users, Shield, Target } from "lucide-react";
@@ -8,7 +7,7 @@ const AboutPage = () => {
     <PageLayout>
       <div className="py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 gradient-trans">Sobre Nós</h1>
+          <h1 className="text-4xl font-bold mb-4 text-foreground">Sobre Nós</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Somos uma plataforma dedicada a apoiar pessoas trans em sua jornada hormonal,
             oferecendo informações confiáveis, recursos especializados e uma comunidade acolhedora.
@@ -93,10 +92,9 @@ const AboutPage = () => {
           <h2 className="text-3xl font-bold mb-6 text-center">Nossa História</h2>
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-muted-foreground mb-4">
-              O Transcare nasceu da necessidade real de pessoas trans que buscavam informações
-              confiáveis sobre terapia hormonal. Fundada em 2023 por um grupo de ativistas,
-              profissionais de saúde e pessoas trans, nossa plataforma foi desenvolvida com
-              base nas experiências vividas pela comunidade.
+              O Transcare nasceu em 2024 de um grupo de estudantes de desenvolvimento web 
+              com o propósito de ajudar pessoas trans a ter mais informações a respeito da 
+              terapia hormonal e atender as necessidades desta comunidade.
             </p>
             <p className="text-lg text-muted-foreground mb-4">
               Percebemos que existia uma lacuna significativa entre as informações médicas
