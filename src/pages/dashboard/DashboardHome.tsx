@@ -2,10 +2,28 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Search, User, Settings } from "lucide-react";
+import { Calendar, Search, User, Settings, FileText, Camera, Heart, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
+import AddProgressRecordModal from "@/components/modals/AddProgressRecordModal";
+import { useProgressRecords } from "@/hooks/useProgressRecords";
 
 const DashboardHome = () => {
+  const { records, addRecord, getRecentRecords } = useProgressRecords();
+  const recentRecords = getRecentRecords(2);
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "photo":
+        return <Camera className="h-4 w-4 text-primary" />;
+      case "measurement":
+        return <FileText className="h-4 w-4 text-primary" />;
+      case "milestone":
+        return <Trophy className="h-4 w-4 text-primary" />;
+      default:
+        return <Heart className="h-4 w-4 text-primary" />;
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -105,14 +123,51 @@ const DashboardHome = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 px-4 bg-accent/50 rounded-md">
-                <p className="text-muted-foreground">
-                  Acompanhe seu progresso adicionando fotos e registros.
-                </p>
-                <Button className="mt-4">
-                  Adicionar Registro
-                </Button>
-              </div>
+              {records.length === 0 ? (
+                <div className="text-center py-8 px-4 bg-accent/50 rounded-md">
+                  <p className="text-muted-foreground mb-4">
+                    Acompanhe seu progresso adicionando fotos e registros.
+                  </p>
+                  <AddProgressRecordModal onAddRecord={addRecord}>
+                    <Button>
+                      Adicionar Registro
+                    </Button>
+                  </AddProgressRecordModal>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentRecords.map((record) => (
+                    <div key={record.id} className="border-l-4 border-primary pl-3 py-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        {getTypeIcon(record.type)}
+                        <p className="font-medium">{record.title}</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        {new Date(record.date).toLocaleDateString('pt-BR')}
+                      </p>
+                      {record.description && (
+                        <p className="text-sm text-muted-foreground">
+                          {record.description.length > 50 
+                            ? `${record.description.substring(0, 50)}...` 
+                            : record.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                  <div className="flex gap-2 pt-2">
+                    <AddProgressRecordModal onAddRecord={addRecord}>
+                      <Button size="sm">
+                        Novo Registro
+                      </Button>
+                    </AddProgressRecordModal>
+                    {records.length > 2 && (
+                      <Button variant="outline" size="sm">
+                        Ver Todos ({records.length})
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
           
