@@ -7,30 +7,18 @@ import { Calendar, Mail, User, Pencil } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useProfile } from "@/hooks/useProfile";
 
 const ProfilePage = () => {
-  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileData, setProfileData] = useState({
-    name: "Ana Silva",
-    email: "ana.silva@email.com",
-    gender: "trans-woman",
-    birthdate: "1990-05-15",
-    startDate: "2022-11-10",
-    currentTherapy: "Estradiol + Espironolactona",
-    avatar: "",
-  });
+  const { profileData, updateProfile, saveProfile, updateAvatar } = useProfile();
 
   const handleSaveProfile = () => {
     setIsEditing(false);
-    toast({
-      title: "Perfil atualizado",
-      description: "Suas informações foram salvas com sucesso.",
-    });
+    saveProfile();
   };
 
   const handleAvatarClick = () => {
@@ -45,16 +33,10 @@ const ProfilePage = () => {
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        setProfileData({...profileData, avatar: reader.result});
+        updateAvatar(reader.result);
       }
     };
     reader.readAsDataURL(file);
-
-    // Show success toast
-    toast({
-      title: "Avatar atualizado",
-      description: "Sua foto de perfil foi atualizada com sucesso.",
-    });
   };
 
   return (
@@ -123,7 +105,7 @@ const ProfilePage = () => {
                             </Button>
                             {profileData.avatar && (
                               <Button 
-                                onClick={() => setProfileData({...profileData, avatar: ""})} 
+                                onClick={() => updateAvatar("")} 
                                 variant="outline" 
                                 className="w-full"
                               >
@@ -152,7 +134,7 @@ const ProfilePage = () => {
                         <Input
                           id="name"
                           value={profileData.name}
-                          onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                          onChange={(e) => updateProfile({ name: e.target.value })}
                           className="pl-10"
                           disabled={!isEditing}
                         />
@@ -167,7 +149,7 @@ const ProfilePage = () => {
                           id="email"
                           type="email"
                           value={profileData.email}
-                          onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                          onChange={(e) => updateProfile({ email: e.target.value })}
                           className="pl-10"
                           disabled={!isEditing}
                         />
@@ -178,7 +160,7 @@ const ProfilePage = () => {
                       <Label htmlFor="gender">Identidade de Gênero</Label>
                       <Select 
                         value={profileData.gender}
-                        onValueChange={(value) => setProfileData({...profileData, gender: value})}
+                        onValueChange={(value) => updateProfile({ gender: value })}
                         disabled={!isEditing}
                       >
                         <SelectTrigger>
@@ -201,7 +183,7 @@ const ProfilePage = () => {
                           id="birthdate"
                           type="date"
                           value={profileData.birthdate}
-                          onChange={(e) => setProfileData({...profileData, birthdate: e.target.value})}
+                          onChange={(e) => updateProfile({ birthdate: e.target.value })}
                           className="pl-10"
                           disabled={!isEditing}
                         />
@@ -253,7 +235,7 @@ const ProfilePage = () => {
                         id="start-date"
                         type="date"
                         value={profileData.startDate}
-                        onChange={(e) => setProfileData({...profileData, startDate: e.target.value})}
+                        onChange={(e) => updateProfile({ startDate: e.target.value })}
                         className="pl-10"
                         disabled={!isEditing}
                       />
@@ -265,7 +247,7 @@ const ProfilePage = () => {
                     <Input
                       id="current-therapy"
                       value={profileData.currentTherapy}
-                      onChange={(e) => setProfileData({...profileData, currentTherapy: e.target.value})}
+                      onChange={(e) => updateProfile({ currentTherapy: e.target.value })}
                       disabled={!isEditing}
                     />
                   </div>
