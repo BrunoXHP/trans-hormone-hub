@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSettings } from "@/hooks/useSettings";
+import DeleteAccountDialog from "@/components/dialogs/DeleteAccountDialog";
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
@@ -268,7 +269,9 @@ const SettingsPage = () => {
                     Esta ação não pode ser desfeita. Todos seus dados serão permanentemente excluídos.
                   </p>
                 </div>
-                <Button variant="destructive">Excluir</Button>
+                <DeleteAccountDialog>
+                  <Button variant="destructive">Excluir</Button>
+                </DeleteAccountDialog>
               </div>
             </CardContent>
           </Card>
