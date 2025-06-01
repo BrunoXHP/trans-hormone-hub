@@ -66,18 +66,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Trans flag colors
+				// Trans flag colors - otimizadas para tema escuro
 				trans: {
 					light: '#FFDEE2', // light pink
 					DEFAULT: '#5BCEFA', // light blue
 					dark: '#5BCEFA', // light blue darker shade
 					pink: {
-						light: '#FFDEE2', // light pink
+						light: '#FFB3C1', // mais claro para melhor contraste no escuro
 						DEFAULT: '#F6A8B8', // pink from trans flag
 						dark: '#E57385', // darker pink
 					},
 					blue: {
-						light: '#D3E4FD', // very light blue
+						light: '#87CEEB', // mais claro para melhor contraste no escuro
 						DEFAULT: '#5BCEFA', // light blue from trans flag
 						dark: '#419DD9', // darker blue
 					},
