@@ -66,22 +66,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Trans flag colors - otimizadas para tema escuro
+				// Trans flag colors - melhorados para melhor contraste
 				trans: {
-					light: '#FFDEE2', // light pink
-					DEFAULT: '#5BCEFA', // light blue
-					dark: '#5BCEFA', // light blue darker shade
+					light: '#FFDEE2',
+					DEFAULT: '#5BCEFA',
+					dark: '#5BCEFA',
 					pink: {
-						light: '#FFB3C1', // mais claro para melhor contraste no escuro
-						DEFAULT: '#F6A8B8', // pink from trans flag
-						dark: '#E57385', // darker pink
+						light: '#F8BBD0', // mais saturado
+						DEFAULT: '#F5A6C1', // mais saturado
+						dark: '#E91E63', // muito mais escuro e vibrante
 					},
 					blue: {
-						light: '#87CEEB', // mais claro para melhor contraste no escuro
-						DEFAULT: '#5BCEFA', // light blue from trans flag
-						dark: '#419DD9', // darker blue
+						light: '#81D4FA', // mais saturado
+						DEFAULT: '#5BCEFA',
+						dark: '#2196F3', // muito mais escuro e vibrante
 					},
-					white: '#FFFFFF', // white from trans flag
+					white: '#FFFFFF',
 				}
 			},
 			borderRadius: {
@@ -118,8 +118,10 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-hero': 'linear-gradient(to right, #5BCEFA, #F6A8B8)',
-				'gradient-trans': 'linear-gradient(to right, #5BCEFA, #F6A8B8, #FFFFFF, #F6A8B8, #5BCEFA)',
+				'gradient-hero': 'linear-gradient(to right, #5BCEFA, #F5A6C1)',
+				'gradient-hero-dark': 'linear-gradient(to right, #2196F3, #E91E63)',
+				'gradient-trans': 'linear-gradient(to right, #5BCEFA, #F5A6C1, #FFFFFF, #F5A6C1, #5BCEFA)',
+				'gradient-trans-dark': 'linear-gradient(to right, #2196F3, #E91E63, #FFFFFF, #E91E63, #2196F3)',
 			}
 		}
 	},

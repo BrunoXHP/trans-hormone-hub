@@ -141,21 +141,40 @@ html {
     @apply bg-gradient-to-r from-trans-blue/10 to-trans-pink/10;
   }
   
-  /* Melhorias para o tema escuro */
+  /* Gradientes melhorados para o tema escuro */
   .dark .trans-button {
-    @apply bg-gradient-to-r from-trans-blue-dark to-trans-pink-dark hover:from-trans-blue/80 hover:to-trans-pink/80 text-white shadow-lg;
+    @apply bg-gradient-to-r from-trans-blue-dark to-trans-pink-dark hover:from-trans-blue-dark/80 hover:to-trans-pink-dark/80 text-white shadow-lg;
   }
   
   .dark .trans-section {
-    @apply bg-gradient-to-r from-trans-blue/5 to-trans-pink/5;
+    @apply bg-gradient-to-r from-trans-blue-dark/20 to-trans-pink-dark/20;
   }
   
   .dark .gradient-text {
-    @apply bg-gradient-to-r from-trans-blue-light to-trans-pink-light bg-clip-text text-transparent;
+    background: linear-gradient(to right, #2196F3, #E91E63);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   .dark .gradient-trans {
-    @apply bg-gradient-to-r from-trans-blue-light to-trans-pink-light bg-clip-text text-transparent;
+    background: linear-gradient(to right, #2196F3, #E91E63, #FFFFFF, #E91E63, #2196F3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Gradientes específicos para botões no tema escuro */
+  .dark .bg-gradient-to-r.from-trans-blue.to-trans-pink {
+    background: linear-gradient(to right, #2196F3, #E91E63) !important;
+  }
+
+  .dark .hover\:from-trans-blue\/90:hover {
+    background: linear-gradient(to right, rgba(33, 150, 243, 0.9), #E91E63) !important;
+  }
+
+  .dark .hover\:to-trans-pink\/90:hover {
+    background: linear-gradient(to right, #2196F3, rgba(233, 30, 99, 0.9)) !important;
   }
 }
 

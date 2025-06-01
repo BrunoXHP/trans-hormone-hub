@@ -53,8 +53,10 @@ const DashboardSidebar = () => {
       isMobile ? "relative" : "fixed left-0 top-0"
     )}>
       <Link to="/" className="flex items-center mb-8 mt-4">
-        <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Transcare
+        <span className="text-xl font-bold text-foreground">
+          <span className="dark:bg-gradient-to-r dark:from-[#2196F3] dark:to-[#E91E63] dark:bg-clip-text dark:text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Transcare
+          </span>
         </span>
       </Link>
       
@@ -66,7 +68,7 @@ const DashboardSidebar = () => {
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200",
               location.pathname === item.href
-                ? "bg-gradient-to-r from-primary/20 to-secondary/20 text-primary font-medium border-l-2 border-primary shadow-sm"
+                ? "bg-gradient-to-r from-primary/20 to-secondary/20 text-primary font-medium border-l-2 border-primary shadow-sm dark:from-[#2196F3]/20 dark:to-[#E91E63]/20 dark:text-[#2196F3] dark:border-[#2196F3]"
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             )}
           >
