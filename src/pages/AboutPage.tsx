@@ -9,7 +9,7 @@ const AboutPage = () => {
       <div className="py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 text-foreground">Sobre Nós</h1>
-          <p className="text-lg text-foreground max-w-3xl mx-auto">
+          <p className="text-lg text-foreground max-w-3xl mx-auto font-semibold">
             Somos uma plataforma dedicada a apoiar pessoas trans em sua jornada hormonal,
             oferecendo informações confiáveis, recursos especializados e uma comunidade acolhedora.
           </p>
@@ -18,13 +18,13 @@ const AboutPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <h2 className="text-3xl font-bold mb-6">Nossa Missão</h2>
-            <p className="text-lg text-foreground mb-4">
+            <p className="text-lg text-foreground mb-4 font-medium">
               Acreditamos que toda pessoa trans merece acesso a informações precisas e suporte
               durante sua jornada de transição hormonal. Nossa plataforma foi criada para
               preencher essa lacuna, oferecendo recursos baseados em evidências científicas
               e experiências reais da comunidade.
             </p>
-            <p className="text-lg text-foreground">
+            <p className="text-lg text-foreground font-medium">
               Trabalhamos para criar um espaço seguro onde pessoas trans possam encontrar
               orientação, compartilhar experiências e construir conexões significativas
               com outras pessoas que passam ou passaram por jornadas similares.
@@ -45,8 +45,8 @@ const AboutPage = () => {
               <div className="bg-trans-blue/20 p-3 rounded-full w-fit mx-auto mb-4">
                 <Heart className="h-6 w-6 text-trans-blue" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Empatia</h3>
-              <p className="text-sm text-foreground">
+              <h3 className="text-lg font-bold mb-2">Empatia</h3>
+              <p className="text-sm text-foreground font-medium">
                 Entendemos as dificuldades e celebramos as conquistas de cada jornada única.
               </p>
             </CardContent>
@@ -57,8 +57,8 @@ const AboutPage = () => {
               <div className="bg-trans-pink/20 p-3 rounded-full w-fit mx-auto mb-4">
                 <Users className="h-6 w-6 text-trans-pink" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Comunidade</h3>
-              <p className="text-sm text-foreground">
+              <h3 className="text-lg font-bold mb-2">Comunidade</h3>
+              <p className="text-sm text-foreground font-medium">
                 Promovemos conexões genuínas e redes de apoio entre nossa comunidade.
               </p>
             </CardContent>
@@ -69,8 +69,8 @@ const AboutPage = () => {
               <div className="bg-trans-blue/20 p-3 rounded-full w-fit mx-auto mb-4">
                 <Shield className="h-6 w-6 text-trans-blue" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Segurança</h3>
-              <p className="text-sm text-foreground">
+              <h3 className="text-lg font-bold mb-2">Segurança</h3>
+              <p className="text-sm text-foreground font-medium">
                 Mantemos um ambiente seguro e respeitoso para todas as pessoas.
               </p>
             </CardContent>
@@ -81,8 +81,8 @@ const AboutPage = () => {
               <div className="bg-trans-pink/20 p-3 rounded-full w-fit mx-auto mb-4">
                 <Target className="h-6 w-6 text-trans-pink" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Precisão</h3>
-              <p className="text-sm text-foreground">
+              <h3 className="text-lg font-bold mb-2">Precisão</h3>
+              <p className="text-sm text-foreground font-medium">
                 Fornecemos informações baseadas em evidências científicas e práticas médicas.
               </p>
             </CardContent>
@@ -92,18 +92,18 @@ const AboutPage = () => {
         <div className="bg-gradient-to-r from-trans-blue/10 to-trans-pink/10 rounded-lg p-8 mb-16">
           <h2 className="text-3xl font-bold mb-6 text-center text-foreground">Nossa História</h2>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-foreground mb-4">
+            <p className="text-lg text-foreground mb-4 font-medium">
               O Transcare nasceu em 2024 de um grupo de estudantes de desenvolvimento web 
               com o propósito de ajudar pessoas trans a ter mais informações a respeito da 
               terapia hormonal e atender as necessidades desta comunidade.
             </p>
-            <p className="text-lg text-foreground mb-4">
+            <p className="text-lg text-foreground mb-4 font-medium">
               Percebemos que existia uma lacuna significativa entre as informações médicas
               técnicas e as necessidades práticas das pessoas que estavam iniciando ou
               passando por transição hormonal. Nossa plataforma foi criada para preencher
               essa lacuna de forma acessível e acolhedora.
             </p>
-            <p className="text-lg text-foreground">
+            <p className="text-lg text-foreground font-medium">
               Hoje, contamos com uma equipe multidisciplinar que inclui endocrinologistas,
               psicólogos, desenvolvedores e membros ativos da comunidade trans, todos
               comprometidos em oferecer o melhor suporte possível.
@@ -113,7 +113,7 @@ const AboutPage = () => {
 
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Junte-se à Nossa Comunidade</h2>
-          <p className="text-lg text-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground mb-8 max-w-2xl mx-auto font-semibold">
             Seja você uma pessoa em transição, um aliado ou um profissional de saúde,
             todos são bem-vindos em nossa comunidade inclusiva e acolhedora.
           </p>
