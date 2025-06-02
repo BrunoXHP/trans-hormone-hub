@@ -1,4 +1,3 @@
-
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Users, Shield, Target } from "lucide-react";
@@ -18,13 +17,13 @@ const AboutPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <h2 className="text-3xl font-bold mb-6">Nossa Missão</h2>
-            <p className="text-lg text-foreground mb-4 font-medium">
+            <p className="text-lg text-foreground mb-4 font-medium" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               Acreditamos que toda pessoa trans merece acesso a informações precisas e suporte
               durante sua jornada de transição hormonal. Nossa plataforma foi criada para
               preencher essa lacuna, oferecendo recursos baseados em evidências científicas
               e experiências reais da comunidade.
             </p>
-            <p className="text-lg text-foreground font-medium">
+            <p className="text-lg text-foreground font-medium" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               Trabalhamos para criar um espaço seguro onde pessoas trans possam encontrar
               orientação, compartilhar experiências e construir conexões significativas
               com outras pessoas que passam ou passaram por jornadas similares.
@@ -92,18 +91,18 @@ const AboutPage = () => {
         <div className="bg-gradient-to-r from-trans-blue/10 to-trans-pink/10 rounded-lg p-8 mb-16">
           <h2 className="text-3xl font-bold mb-6 text-center text-foreground">Nossa História</h2>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-foreground mb-4 font-medium">
+            <p className="text-lg text-foreground mb-4 font-medium" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               O Transcare nasceu em 2024 de um grupo de estudantes de desenvolvimento web 
               com o propósito de ajudar pessoas trans a ter mais informações a respeito da 
               terapia hormonal e atender as necessidades desta comunidade.
             </p>
-            <p className="text-lg text-foreground mb-4 font-medium">
+            <p className="text-lg text-foreground mb-4 font-medium" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               Percebemos que existia uma lacuna significativa entre as informações médicas
               técnicas e as necessidades práticas das pessoas que estavam iniciando ou
               passando por transição hormonal. Nossa plataforma foi criada para preencher
               essa lacuna de forma acessível e acolhedora.
             </p>
-            <p className="text-lg text-foreground font-medium">
+            <p className="text-lg text-foreground font-medium" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               Hoje, contamos com uma equipe multidisciplinar que inclui endocrinologistas,
               psicólogos, desenvolvedores e membros ativos da comunidade trans, todos
               comprometidos em oferecer o melhor suporte possível.
