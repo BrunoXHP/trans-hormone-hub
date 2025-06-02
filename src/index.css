@@ -156,19 +156,17 @@ html {
     background: linear-gradient(to right, rgba(33, 150, 243, 0.2), rgba(233, 30, 99, 0.2));
   }
   
-  /* Gradientes de texto otimizados para melhor legibilidade no tema escuro */
+  /* Remove gradients from text in dark theme for better readability */
   .dark .gradient-text {
-    background: linear-gradient(to right, #87CEEB, #FFB6C1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    color: hsl(var(--foreground));
+    -webkit-text-fill-color: unset;
   }
   
   .dark .gradient-trans {
-    background: linear-gradient(to right, #87CEEB, #FFB6C1, #FFFFFF, #FFB6C1, #87CEEB);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    color: hsl(var(--foreground));
+    -webkit-text-fill-color: unset;
   }
 }
 
