@@ -7,10 +7,10 @@ const CtaSection = () => {
     <section className="py-16 bg-accent/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-4 dark:drop-shadow-[0_0_8px_rgba(0,0,0,0.9)]">
             Comece sua jornada hormonal com confiança
           </h2>
-          <p className="text-lg text-muted-foreground mb-8">
+          <p className="text-lg text-muted-foreground mb-8 font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">
             Junte-se à nossa comunidade e acesse recursos especializados para
             apoiar sua jornada de transição.
           </p>

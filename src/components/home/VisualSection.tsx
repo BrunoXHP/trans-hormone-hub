@@ -18,8 +18,8 @@ const VisualSection = () => {
             </div>
           </div>
           <div className="w-full md:w-1/2 space-y-6">
-            <h2 className="text-3xl font-bold">Transforme dados em saúde</h2>
-            <p className="text-lg">
+            <h2 className="text-3xl font-bold dark:drop-shadow-[0_0_8px_rgba(0,0,0,0.9)]">Transforme dados em saúde</h2>
+            <p className="text-lg font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">
               Nossa plataforma utiliza tecnologia avançada para transformar seus dados em 
               insights valiosos que ajudam a monitorar e melhorar sua jornada hormonal.
             </p>
@@ -28,19 +28,19 @@ const VisualSection = () => {
                 <div className="bg-primary/20 p-2 rounded-full">
                   <Calendar className="h-5 w-5 text-primary" />
                 </div>
-                <span>Acompanhamento visual do progresso</span>
+                <span className="font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Acompanhamento visual do progresso</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="bg-primary/20 p-2 rounded-full">
                   <Search className="h-5 w-5 text-primary" />
                 </div>
-                <span>Alertas e lembretes personalizados</span>
+                <span className="font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Alertas e lembretes personalizados</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="bg-primary/20 p-2 rounded-full">
                   <Heart className="h-5 w-5 text-primary" />
                 </div>
-                <span>Relatórios detalhados para compartilhar</span>
+                <span className="font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Relatórios detalhados para compartilhar</span>
               </li>
             </ul>
             <div className="flex flex-wrap gap-3 mt-4">

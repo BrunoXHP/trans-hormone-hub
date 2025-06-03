@@ -12,8 +12,8 @@ const ImageCarousel = () => {
     <section className="py-16 bg-accent/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-4">Jornada de Transformação</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold mb-4 dark:drop-shadow-[0_0_8px_rgba(0,0,0,0.9)]">Jornada de Transformação</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">
             Acompanhamos cada etapa do seu processo com cuidado e atenção personalizada
           </p>
         </div>
@@ -31,8 +31,8 @@ const ImageCarousel = () => {
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Visibilidade Trans</h3>
-                    <p className="text-muted-foreground">Promovendo a conscientização e aceitação</p>
+                    <h3 className="text-lg font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">Visibilidade Trans</h3>
+                    <p className="text-muted-foreground font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Promovendo a conscientização e aceitação</p>
                   </div>
                 </div>
               </CarouselItem>
@@ -47,8 +47,8 @@ const ImageCarousel = () => {
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Comunidade e Pertencimento</h3>
-                    <p className="text-muted-foreground">Fortalecendo laços e criando suporte</p>
+                    <h3 className="text-lg font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">Comunidade e Pertencimento</h3>
+                    <p className="text-muted-foreground font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Fortalecendo laços e criando suporte</p>
                   </div>
                 </div>
               </CarouselItem>
@@ -63,8 +63,8 @@ const ImageCarousel = () => {
                     />
                   </div>
                   <div className="text-center mt-4">
-                    <h3 className="text-lg font-medium">Celebrando a Diversidade</h3>
-                    <p className="text-muted-foreground">Honrando as múltiplas identidades e expressões</p>
+                    <h3 className="text-lg font-medium dark:drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">Celebrando a Diversidade</h3>
+                    <p className="text-muted-foreground font-medium dark:drop-shadow-[0_0_4px_rgba(0,0,0,0.7)]">Honrando as múltiplas identidades e expressões</p>
                   </div>
                 </div>
               </CarouselItem>
