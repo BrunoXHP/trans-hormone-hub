@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +9,7 @@ interface Profile {
   name: string;
   email: string;
   gender: string;
+  birth_date: string | null;
   created_at: string;
   updated_at: string;
 }

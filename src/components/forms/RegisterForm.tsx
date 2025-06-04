@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, User, Key } from "lucide-react";
+import { Mail, User, Key, Calendar } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +15,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const RegisterForm = () => {
       return;
     }
     
-    if (!name || !email || !password || !gender) {
+    if (!name || !email || !password || !gender || !birthDate) {
       toast({
         title: "Erro no cadastro",
         description: "Por favor, preencha todos os campos.",
@@ -44,7 +45,7 @@ const RegisterForm = () => {
     }
 
     try {
-      console.log('Attempting to register user with:', { name, email, gender });
+      console.log('Attempting to register user with:', { name, email, gender, birthDate });
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -53,6 +54,7 @@ const RegisterForm = () => {
           data: {
             name,
             gender,
+            birth_date: birthDate,
           },
         },
       });
@@ -113,6 +115,21 @@ const RegisterForm = () => {
             className="pl-10"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="birth-date">Data de Nascimento</Label>
+        <div className="relative">
+          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            id="birth-date"
+            type="date"
+            className="pl-10"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
             required
           />
         </div>

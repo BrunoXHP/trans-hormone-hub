@@ -1,6 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AccountSettings {
   email: string;
@@ -24,13 +26,14 @@ interface PrivacySettings {
 
 export const useSettings = () => {
   const { toast } = useToast();
+  const { profile, fetchProfile } = useAuth();
 
   const [accountSettings, setAccountSettings] = useState<AccountSettings>(() => {
     const saved = localStorage.getItem('accountSettings');
     return saved ? JSON.parse(saved) : {
-      email: "usuario@exemplo.com",
-      name: "Usuário Exemplo",
-      phone: "(11) 98765-4321",
+      email: "",
+      name: "",
+      phone: "",
     };
   });
 
@@ -54,6 +57,17 @@ export const useSettings = () => {
     };
   });
 
+  // Update account settings when profile changes
+  useEffect(() => {
+    if (profile) {
+      setAccountSettings(prev => ({
+        ...prev,
+        email: profile.email,
+        name: profile.name,
+      }));
+    }
+  }, [profile]);
+
   useEffect(() => {
     localStorage.setItem('accountSettings', JSON.stringify(accountSettings));
     console.log('Account settings saved:', accountSettings);
@@ -70,15 +84,52 @@ export const useSettings = () => {
   }, [privacySettings]);
 
   const saveAccountSettings = async (newSettings: AccountSettings) => {
-    setAccountSettings(newSettings);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Configurações salvas",
-      description: "Suas configurações de conta foram atualizadas com sucesso.",
-    });
+    try {
+      if (!profile) {
+        toast({
+          title: "Erro",
+          description: "Usuário não encontrado.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update the profile in Supabase
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          name: newSettings.name,
+          email: newSettings.email,
+        })
+        .eq('id', profile.id);
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao salvar configurações.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setAccountSettings(newSettings);
+      
+      // Refresh profile data
+      await fetchProfile(profile.id);
+      
+      toast({
+        title: "Configurações salvas",
+        description: "Suas configurações de conta foram atualizadas com sucesso.",
+      });
+    } catch (error) {
+      console.error('Unexpected error saving settings:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado.",
+        variant: "destructive",
+      });
+    }
   };
 
   const toggleNotification = (key: keyof NotificationSettings) => {
