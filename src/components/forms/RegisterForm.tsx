@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, User, Key } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const RegisterForm = () => {
   const [name, setName] = useState("");
@@ -32,21 +33,53 @@ const RegisterForm = () => {
       return;
     }
     
-    // Simulate registration
-    if (name && email && password && gender) {
-      setTimeout(() => {
-        toast({
-          title: "Cadastro realizado com sucesso!",
-          description: "Bem-vindo(a) ao TransFormAção.",
-        });
-        navigate("/dashboard");
-      }, 1000);
-    } else {
+    if (!name || !email || !password || !gender) {
       toast({
         title: "Erro no cadastro",
         description: "Por favor, preencha todos os campos.",
         variant: "destructive",
       });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      console.log('Attempting to register user with:', { name, email, gender });
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            gender,
+          },
+        },
+      });
+
+      if (error) {
+        console.error('Registration error:', error);
+        toast({
+          title: "Erro no cadastro",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else if (data.user) {
+        console.log('User registered successfully:', data.user);
+        toast({
+          title: "Cadastro realizado com sucesso!",
+          description: "Verifique seu email para confirmar a conta e depois faça login.",
+        });
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error('Unexpected error during registration:', error);
+      toast({
+        title: "Erro no cadastro",
+        description: "Ocorreu um erro inesperado. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
     }
   };

@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface DeleteAccountDialogProps {
   children: React.ReactNode;
@@ -24,27 +26,80 @@ const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
   const [feedback, setFeedback] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     
-    // Simulate account deletion process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Save feedback if provided
-    if (feedback.trim()) {
-      localStorage.setItem('accountDeletionFeedback', feedback);
-      console.log('Feedback saved:', feedback);
+    try {
+      console.log('Starting account deletion process');
+      
+      // Save feedback if provided
+      if (feedback.trim()) {
+        localStorage.setItem('accountDeletionFeedback', feedback);
+        console.log('Feedback saved:', feedback);
+      }
+
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error('Error getting current user:', userError);
+        toast({
+          title: "Erro",
+          description: "Não foi possível obter informações do usuário.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Current user:', user.id);
+
+      // Delete user profile (this will cascade delete the auth user due to our foreign key constraint)
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', user.id);
+
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+        toast({
+          title: "Erro",
+          description: "Erro ao excluir perfil: " + profileError.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Profile deleted successfully');
+
+      // Sign out the user
+      const { error: signOutError } = await supabase.auth.signOut();
+      
+      if (signOutError) {
+        console.error('Error signing out:', signOutError);
+      }
+
+      toast({
+        title: "Conta excluída",
+        description: "Sua conta foi excluída com sucesso. Obrigado pelo feedback.",
+        variant: "destructive",
+      });
+
+      // Redirect to home page
+      navigate("/");
+      
+    } catch (error) {
+      console.error('Unexpected error during account deletion:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setFeedback("");
     }
-    
-    toast({
-      title: "Conta excluída",
-      description: "Sua conta foi excluída com sucesso. Obrigado pelo feedback.",
-      variant: "destructive",
-    });
-    
-    setIsDeleting(false);
-    setFeedback("");
   };
 
   return (
