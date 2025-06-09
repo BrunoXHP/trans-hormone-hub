@@ -8,7 +8,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 text-foreground">Como Podemos Ajudar</h2>
-          <p className="text-lg text-foreground/80 max-w-2xl mx-auto font-medium">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium">
             Nossa plataforma oferece recursos especializados para apoiar sua
             jornada hormonal com informações confiáveis e comunidade.
           </p>
@@ -21,7 +21,7 @@ const FeaturesSection = () => {
                 <Search className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">Informações Confiáveis</h3>
-              <p className="text-foreground/70 font-medium">
+              <p className="text-muted-foreground font-medium">
                 Acesso a conteúdos sobre terapia hormonal revisados por profissionais da saúde.
               </p>
             </CardContent>
@@ -33,7 +33,7 @@ const FeaturesSection = () => {
                 <Calendar className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">Acompanhamento</h3>
-              <p className="text-foreground/70 font-medium">
+              <p className="text-muted-foreground font-medium">
                 Ferramentas para acompanhar sua jornada, incluindo calendário e registro de mudanças.
               </p>
             </CardContent>
@@ -45,7 +45,7 @@ const FeaturesSection = () => {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">Suporte Personalizado</h3>
-              <p className="text-foreground/70 font-medium">
+              <p className="text-muted-foreground font-medium">
                 Conteúdo adaptado à sua identidade e fase da jornada hormonal.
               </p>
             </CardContent>

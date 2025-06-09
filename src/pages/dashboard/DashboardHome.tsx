@@ -1,204 +1,124 @@
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, Search, User, Settings, FileText, Camera, Heart, Trophy } from "lucide-react";
-import { Link } from "react-router-dom";
-import AddProgressRecordModal from "@/components/modals/AddProgressRecordModal";
-import { useProgressRecords } from "@/hooks/useProgressRecords";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heart, Calendar, User, TrendingUp } from "lucide-react";
+import AgendaSection from "@/components/dashboard/AgendaSection";
+import AddAgendaEventModal from "@/components/modals/AddAgendaEventModal";
 
 const DashboardHome = () => {
-  const { records, addRecord, getRecentRecords } = useProgressRecords();
-  const recentRecords = getRecentRecords(2);
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "photo":
-        return <Camera className="h-4 w-4 text-primary" />;
-      case "measurement":
-        return <FileText className="h-4 w-4 text-primary" />;
-      case "milestone":
-        return <Trophy className="h-4 w-4 text-primary" />;
-      default:
-        return <Heart className="h-4 w-4 text-primary" />;
-    }
-  };
-
   return (
     <DashboardLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Bem-vindo(a) ao seu espaço</h1>
-          <p className="text-muted-foreground">
-            Veja suas informações personalizadas e gerencie sua jornada hormonal
-          </p>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Acompanhe seu progresso e gerencie sua jornada.
+            </p>
+          </div>
+          <AddAgendaEventModal />
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                Próximas Aplicações
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">
+                Dias de Jornada
               </CardTitle>
+              <Heart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="border-l-4 border-primary pl-3 py-1">
-                  <p className="font-medium">Aplicação Hormonal</p>
-                  <p className="text-sm text-muted-foreground">18 de Maio, 10:00</p>
-                </div>
-                <div className="border-l-4 border-muted pl-3 py-1">
-                  <p className="font-medium">Consulta - Endocrinologista</p>
-                  <p className="text-sm text-muted-foreground">23 de Maio, 15:30</p>
-                </div>
-                <Link to="/dashboard/calendar">
-                  <Button variant="outline" size="sm" className="w-full mt-2">
-                    Ver Agenda Completa
-                  </Button>
-                </Link>
-              </div>
+              <div className="text-2xl font-bold text-foreground">127</div>
+              <p className="text-xs text-muted-foreground">
+                +2 desde ontem
+              </p>
             </CardContent>
           </Card>
-          
+
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" />
-                Seu Perfil
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">
+                Próximas Consultas
               </CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Terapia Atual</p>
-                  <p className="font-medium">Terapia Hormonal Feminizante</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Tempo de TH</p>
-                  <p className="font-medium">6 meses</p>
-                </div>
-                <Link to="/dashboard/profile">
-                  <Button variant="outline" size="sm" className="w-full mt-2">
-                    Editar Perfil
-                  </Button>
-                </Link>
-              </div>
+              <div className="text-2xl font-bold text-foreground">3</div>
+              <p className="text-xs text-muted-foreground">
+                Este mês
+              </p>
             </CardContent>
           </Card>
-          
+
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Search className="h-5 w-5 text-primary" />
-                Informações Recomendadas
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">
+                Registros de Progresso
               </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <Link to="/dashboard/info" className="block hover:bg-accent rounded p-2 -mx-2 transition-colors">
-                  <p className="font-medium">Mudanças aos 6 meses de TH</p>
-                  <p className="text-sm text-muted-foreground">O que esperar no seu estágio atual</p>
-                </Link>
-                <Link to="/dashboard/info" className="block hover:bg-accent rounded p-2 -mx-2 transition-colors">
-                  <p className="font-medium">Dicas para aplicação segura</p>
-                  <p className="text-sm text-muted-foreground">Guia passo a passo</p>
-                </Link>
-                <Link to="/dashboard/info">
-                  <Button variant="outline" size="sm" className="w-full mt-2">
-                    Ver Mais Informações
-                  </Button>
-                </Link>
-              </div>
+              <div className="text-2xl font-bold text-foreground">24</div>
+              <p className="text-xs text-muted-foreground">
+                +4 esta semana
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">
+                Perfil Completo
+              </CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-foreground">85%</div>
+              <p className="text-xs text-muted-foreground">
+                Faltam alguns dados
+              </p>
             </CardContent>
           </Card>
         </div>
-        
+
+        {/* Agenda Section */}
+        <AgendaSection />
+
+        {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Seu Progresso</CardTitle>
-              <CardDescription>
-                Acompanhe sua jornada hormonal
-              </CardDescription>
+              <CardTitle className="text-foreground">Ações Rápidas</CardTitle>
             </CardHeader>
-            <CardContent>
-              {records.length === 0 ? (
-                <div className="text-center py-8 px-4 bg-accent/50 rounded-md">
-                  <p className="text-muted-foreground mb-4">
-                    Acompanhe seu progresso adicionando fotos e registros.
-                  </p>
-                  <AddProgressRecordModal onAddRecord={addRecord}>
-                    <Button>
-                      Adicionar Registro
-                    </Button>
-                  </AddProgressRecordModal>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {recentRecords.map((record) => (
-                    <div key={record.id} className="border-l-4 border-primary pl-3 py-2">
-                      <div className="flex items-center gap-2 mb-1">
-                        {getTypeIcon(record.type)}
-                        <p className="font-medium">{record.title}</p>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        {new Date(record.date).toLocaleDateString('pt-BR')}
-                      </p>
-                      {record.description && (
-                        <p className="text-sm text-muted-foreground">
-                          {record.description.length > 50 
-                            ? `${record.description.substring(0, 50)}...` 
-                            : record.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                  <div className="flex gap-2 pt-2">
-                    <AddProgressRecordModal onAddRecord={addRecord}>
-                      <Button size="sm">
-                        Novo Registro
-                      </Button>
-                    </AddProgressRecordModal>
-                    {records.length > 2 && (
-                      <Button variant="outline" size="sm">
-                        Ver Todos ({records.length})
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
+            <CardContent className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-primary" />
+                <span className="text-sm text-foreground">Agendar consulta</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                <span className="text-sm text-foreground">Registrar progresso</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <User className="h-4 w-4 text-primary" />
+                <span className="text-sm text-foreground">Atualizar perfil</span>
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
-              <CardTitle>Configurações</CardTitle>
-              <CardDescription>
-                Personalize sua experiência
-              </CardDescription>
+              <CardTitle className="text-foreground">Próximos Marcos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <Link to="/dashboard/settings" className="flex items-center gap-2 hover:bg-accent rounded p-2 -mx-2 transition-colors">
-                  <Settings className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Notificações</p>
-                    <p className="text-sm text-muted-foreground">Gerencie lembretes e alertas</p>
-                  </div>
-                </Link>
-                <Link to="/dashboard/settings" className="flex items-center gap-2 hover:bg-accent rounded p-2 -mx-2 transition-colors">
-                  <User className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium">Dados Pessoais</p>
-                    <p className="text-sm text-muted-foreground">Atualize suas informações</p>
-                  </div>
-                </Link>
-                <Link to="/dashboard/settings">
-                  <Button variant="outline" size="sm" className="w-full mt-2">
-                    Todas as Configurações
-                  </Button>
-                </Link>
+              <div className="space-y-2">
+                <div className="text-sm text-foreground">
+                  6 meses de terapia hormonal em 3 dias
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Continue acompanhando seu progresso!
+                </div>
               </div>
             </CardContent>
           </Card>
