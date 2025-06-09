@@ -64,7 +64,7 @@
     --secondary-foreground: 220 10% 95%;
 
     --muted: 220 15% 18%;
-    --muted-foreground: 210 10% 75%;
+    --muted-foreground: 210 10% 70%;
 
     --accent: 220 15% 20%;
     --accent-foreground: 210 10% 95%;
@@ -173,22 +173,34 @@ html {
 
   /* Melhores contrastes para texto no modo escuro */
   .dark input {
-    color: hsl(var(--foreground));
+    color: hsl(210 10% 95%) !important;
     background-color: hsl(var(--input));
   }
 
   .dark label {
-    color: hsl(var(--foreground));
+    color: hsl(210 10% 95%) !important;
     font-weight: 500;
   }
 
   .dark .text-muted-foreground {
-    color: hsl(var(--muted-foreground));
+    color: hsl(210 10% 70%) !important;
   }
 
   .dark select {
-    color: hsl(var(--foreground));
+    color: hsl(210 10% 95%) !important;
     background-color: hsl(var(--background));
+  }
+
+  .dark input::placeholder {
+    color: hsl(210 10% 60%) !important;
+  }
+
+  .dark .text-foreground {
+    color: hsl(210 10% 95%) !important;
+  }
+
+  .dark .text-popover-foreground {
+    color: hsl(210 10% 95%) !important;
   }
 }
 

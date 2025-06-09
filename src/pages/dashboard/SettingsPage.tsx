@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSettings } from "@/hooks/useSettings";
@@ -14,25 +13,11 @@ import DeleteAccountDialog from "@/components/dialogs/DeleteAccountDialog";
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
   const {
-    accountSettings,
     notifications,
     privacySettings,
-    saveAccountSettings,
     toggleNotification,
     togglePrivacy,
-    setAccountSettings,
   } = useSettings();
-  
-  const [loading, setLoading] = useState(false);
-
-  const handleAccountSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    saveAccountSettings(accountSettings).finally(() => {
-      setLoading(false);
-    });
-  };
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
@@ -44,55 +29,6 @@ const SettingsPage = () => {
         <h1 className="text-2xl font-bold mb-6">Configurações</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Account Settings */}
-          <Card className="md:col-span-3">
-            <CardHeader>
-              <CardTitle>Configurações de Conta</CardTitle>
-              <CardDescription>
-                Gerencie suas informações pessoais e de contato
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleAccountSave}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nome completo</Label>
-                    <Input 
-                      id="name" 
-                      value={accountSettings.name} 
-                      onChange={(e) => setAccountSettings({...accountSettings, name: e.target.value})}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      value={accountSettings.email} 
-                      onChange={(e) => setAccountSettings({...accountSettings, email: e.target.value})}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
-                    <Input 
-                      id="phone" 
-                      value={accountSettings.phone} 
-                      onChange={(e) => setAccountSettings({...accountSettings, phone: e.target.value})}
-                    />
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "Salvando..." : "Salvar alterações"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-          
           {/* Notifications */}
           <Card className="md:col-span-3 lg:col-span-2">
             <CardHeader>

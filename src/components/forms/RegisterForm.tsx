@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, User, Key, Calendar } from "lucide-react";
+import { Mail, User, Key, Calendar, Eye, EyeOff } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +14,8 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [gender, setGender] = useState("");
   const [customGender, setCustomGender] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -76,6 +78,7 @@ const RegisterForm = () => {
             gender: finalGender,
             birth_date: birthDate,
           },
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
 
@@ -189,12 +192,25 @@ const RegisterForm = () => {
           <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="password"
-            type="password"
-            className="pl-10 bg-background border-border text-foreground"
+            type={showPassword ? "text" : "password"}
+            className="pl-10 pr-10 bg-background border-border text-foreground"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            )}
+          </Button>
         </div>
       </div>
       
@@ -204,12 +220,25 @@ const RegisterForm = () => {
           <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="confirm-password"
-            type="password"
-            className="pl-10 bg-background border-border text-foreground"
+            type={showConfirmPassword ? "text" : "password"}
+            className="pl-10 pr-10 bg-background border-border text-foreground"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            )}
+          </Button>
         </div>
       </div>
       

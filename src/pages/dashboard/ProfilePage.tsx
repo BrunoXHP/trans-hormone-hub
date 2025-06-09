@@ -1,24 +1,33 @@
+
 import { useState, useRef, ChangeEvent } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Mail, User, Pencil } from "lucide-react";
+import { Calendar, Mail, User, Pencil, Phone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useProfile } from "@/hooks/useProfile";
+import { useSettings } from "@/hooks/useSettings";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { profileData, updateProfile, saveProfile, updateAvatar } = useProfile();
+  const { accountSettings, saveAccountSettings, setAccountSettings } = useSettings();
 
   const handleSaveProfile = () => {
     setIsEditing(false);
     saveProfile();
+  };
+
+  const handleSaveAccount = async () => {
+    setIsEditingAccount(false);
+    await saveAccountSettings(accountSettings);
   };
 
   const handleAvatarClick = () => {
@@ -50,8 +59,9 @@ const ProfilePage = () => {
         </div>
 
         <Tabs defaultValue="personal">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="personal">Informações Pessoais</TabsTrigger>
+            <TabsTrigger value="account">Configurações de Conta</TabsTrigger>
             <TabsTrigger value="therapy">Terapia Hormonal</TabsTrigger>
             <TabsTrigger value="calendar">Agenda</TabsTrigger>
           </TabsList>
@@ -128,21 +138,21 @@ const ProfilePage = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Nome</Label>
+                      <Label htmlFor="name" className="text-foreground">Nome</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="name"
                           value={profileData.name}
                           onChange={(e) => updateProfile({ name: e.target.value })}
-                          className="pl-10"
+                          className="pl-10 bg-background border-border text-foreground"
                           disabled={!isEditing}
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email" className="text-foreground">Email</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -150,33 +160,33 @@ const ProfilePage = () => {
                           type="email"
                           value={profileData.email}
                           onChange={(e) => updateProfile({ email: e.target.value })}
-                          className="pl-10"
+                          className="pl-10 bg-background border-border text-foreground"
                           disabled={!isEditing}
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="gender">Identidade de Gênero</Label>
+                      <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
                       <Select 
                         value={profileData.gender}
                         onValueChange={(value) => updateProfile({ gender: value })}
                         disabled={!isEditing}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-background border-border text-foreground">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="trans-woman">Mulher Trans</SelectItem>
-                          <SelectItem value="trans-man">Homem Trans</SelectItem>
-                          <SelectItem value="non-binary">Não-binário</SelectItem>
-                          <SelectItem value="other">Outro</SelectItem>
+                        <SelectContent className="bg-popover border-border">
+                          <SelectItem value="trans-woman" className="text-popover-foreground hover:bg-accent">Mulher Trans</SelectItem>
+                          <SelectItem value="trans-man" className="text-popover-foreground hover:bg-accent">Homem Trans</SelectItem>
+                          <SelectItem value="non-binary" className="text-popover-foreground hover:bg-accent">Não-binário</SelectItem>
+                          <SelectItem value="other" className="text-popover-foreground hover:bg-accent">Outro</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="birthdate">Data de Nascimento</Label>
+                      <Label htmlFor="birthdate" className="text-foreground">Data de Nascimento</Label>
                       <div className="relative">
                         <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -184,10 +194,74 @@ const ProfilePage = () => {
                           type="date"
                           value={profileData.birthdate}
                           onChange={(e) => updateProfile({ birthdate: e.target.value })}
-                          className="pl-10"
+                          className="pl-10 bg-background border-border text-foreground"
                           disabled={!isEditing}
                         />
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="account" className="mt-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Configurações de Conta</CardTitle>
+                  <CardDescription>Gerencie suas informações de contato e preferências</CardDescription>
+                </div>
+                <Button 
+                  variant={isEditingAccount ? "outline" : "default"}
+                  onClick={() => isEditingAccount ? handleSaveAccount() : setIsEditingAccount(true)}
+                >
+                  {isEditingAccount ? "Salvar" : "Editar"}
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="account-name" className="text-foreground">Nome completo</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        id="account-name" 
+                        value={accountSettings.name} 
+                        onChange={(e) => setAccountSettings({...accountSettings, name: e.target.value})}
+                        className="pl-10 bg-background border-border text-foreground"
+                        disabled={!isEditingAccount}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="account-email" className="text-foreground">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        id="account-email" 
+                        type="email" 
+                        value={accountSettings.email} 
+                        onChange={(e) => setAccountSettings({...accountSettings, email: e.target.value})}
+                        className="pl-10 bg-background border-border text-foreground"
+                        disabled={!isEditingAccount}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-foreground">Telefone</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        id="phone" 
+                        value={accountSettings.phone} 
+                        onChange={(e) => setAccountSettings({...accountSettings, phone: e.target.value})}
+                        className="pl-10 bg-background border-border text-foreground"
+                        placeholder="(11) 99999-9999"
+                        disabled={!isEditingAccount}
+                      />
                     </div>
                   </div>
                 </div>
@@ -212,23 +286,23 @@ const ProfilePage = () => {
               <CardContent>
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <Label>Tipo de Terapia Atual</Label>
+                    <Label className="text-foreground">Tipo de Terapia Atual</Label>
                     <Select 
                       value={profileData.gender === "trans-woman" ? "feminizante" : "masculinizante"} 
                       disabled
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-background border-border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="feminizante">Terapia Feminizante</SelectItem>
-                        <SelectItem value="masculinizante">Terapia Masculinizante</SelectItem>
+                      <SelectContent className="bg-popover border-border">
+                        <SelectItem value="feminizante" className="text-popover-foreground hover:bg-accent">Terapia Feminizante</SelectItem>
+                        <SelectItem value="masculinizante" className="text-popover-foreground hover:bg-accent">Terapia Masculinizante</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="start-date">Data de Início</Label>
+                    <Label htmlFor="start-date" className="text-foreground">Data de Início</Label>
                     <div className="relative">
                       <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -236,29 +310,30 @@ const ProfilePage = () => {
                         type="date"
                         value={profileData.startDate}
                         onChange={(e) => updateProfile({ startDate: e.target.value })}
-                        className="pl-10"
+                        className="pl-10 bg-background border-border text-foreground"
                         disabled={!isEditing}
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="current-therapy">Medicamentos Atuais</Label>
+                    <Label htmlFor="current-therapy" className="text-foreground">Medicamentos Atuais</Label>
                     <Input
                       id="current-therapy"
                       value={profileData.currentTherapy}
                       onChange={(e) => updateProfile({ currentTherapy: e.target.value })}
+                      className="bg-background border-border text-foreground"
                       disabled={!isEditing}
                     />
                   </div>
 
                   <div className="pt-4">
-                    <h3 className="font-medium mb-2">Progresso</h3>
+                    <h3 className="font-medium mb-2 text-foreground">Progresso</h3>
                     <div className="flex items-center mb-4">
                       <div className="h-2 flex-grow bg-muted rounded-full overflow-hidden">
                         <div className="h-full bg-primary rounded-full" style={{ width: "25%" }}></div>
                       </div>
-                      <span className="ml-4 text-sm">6 meses</span>
+                      <span className="ml-4 text-sm text-foreground">6 meses</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Você está no início da sua jornada. Continue acompanhando seu progresso regularmente.
@@ -266,7 +341,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="pt-2">
-                    <Button className="w-full">Adicionar Registro de Progresso</Button>
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Adicionar Registro de Progresso</Button>
                   </div>
                 </div>
               </CardContent>
@@ -282,11 +357,11 @@ const ProfilePage = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="bg-accent/50 text-center p-8 rounded-md">
-                    <p>Calendário em desenvolvimento</p>
+                    <p className="text-foreground">Calendário em desenvolvimento</p>
                     <p className="text-sm text-muted-foreground mt-2">
                       Em breve você poderá gerenciar suas consultas e aplicações aqui
                     </p>
-                    <Button className="mt-4">Visualizar Agenda</Button>
+                    <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">Visualizar Agenda</Button>
                   </div>
                 </div>
               </CardContent>
