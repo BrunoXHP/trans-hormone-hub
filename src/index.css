@@ -49,39 +49,39 @@
 
   .dark {
     --background: 220 20% 8%;
-    --foreground: 210 10% 90%;
+    --foreground: 210 10% 95%;
 
     --card: 220 15% 12%;
-    --card-foreground: 210 10% 90%;
+    --card-foreground: 210 10% 95%;
 
-    --popover: 220 15% 12%;
-    --popover-foreground: 210 10% 90%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 210 10% 95%;
 
     --primary: 195 94% 64%;
-    --primary-foreground: 220 10% 95%;
+    --primary-foreground: 220 20% 8%;
 
     --secondary: 340 60% 65%;
     --secondary-foreground: 220 10% 95%;
 
     --muted: 220 15% 18%;
-    --muted-foreground: 210 10% 70%;
+    --muted-foreground: 210 10% 75%;
 
-    --accent: 220 15% 18%;
-    --accent-foreground: 210 10% 90%;
+    --accent: 220 15% 20%;
+    --accent-foreground: 210 10% 95%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 10% 90%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 10% 95%;
 
     --border: 220 15% 25%;
-    --input: 220 15% 25%;
+    --input: 220 15% 20%;
     --ring: 195 94% 64%;
     
     --sidebar-background: 220 20% 10%;
-    --sidebar-foreground: 210 10% 85%;
+    --sidebar-foreground: 210 10% 90%;
     --sidebar-primary: 195 94% 64%;
-    --sidebar-primary-foreground: 220 10% 95%;
+    --sidebar-primary-foreground: 220 20% 8%;
     --sidebar-accent: 220 15% 20%;
-    --sidebar-accent-foreground: 210 10% 90%;
+    --sidebar-accent-foreground: 210 10% 95%;
     --sidebar-border: 220 15% 25%;
     --sidebar-ring: 195 94% 64%;
   }
@@ -156,17 +156,39 @@ html {
     background: linear-gradient(to right, rgba(33, 150, 243, 0.2), rgba(233, 30, 99, 0.2));
   }
   
-  /* Remove gradients from text in dark theme for better readability */
+  /* Melhor contraste para textos no modo escuro */
   .dark .gradient-text {
     background: none;
     color: hsl(var(--foreground));
     -webkit-text-fill-color: unset;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
   
   .dark .gradient-trans {
     background: none;
     color: hsl(var(--foreground));
     -webkit-text-fill-color: unset;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Melhores contrastes para texto no modo escuro */
+  .dark input {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--input));
+  }
+
+  .dark label {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+  }
+
+  .dark .text-muted-foreground {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .dark select {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
   }
 }
 
