@@ -8,14 +8,22 @@ import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [username, setUsername] = useState("Usuário");
   const isMobile = useIsMobile();
+  const { profile } = useAuth();
+  
+  const getUserDisplayName = () => {
+    if (profile?.name) {
+      return profile.name.split(' ')[0]; // First name only
+    }
+    return "Usuário";
+  };
   
   return (
     <div className="min-h-screen flex bg-background">
@@ -46,11 +54,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         {/* Desktop header */}
         <header className="hidden md:flex items-center justify-end p-4 border-b">
           <div className="flex items-center">
-            <span className="mr-2 text-sm font-medium">Olá, {username}</span>
+            <span className="mr-2 text-sm font-medium">Olá, {getUserDisplayName()}</span>
             <Link to="/dashboard/profile">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary/20 text-primary">
-                  {username.charAt(0).toUpperCase()}
+                  {getUserDisplayName().charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </Link>

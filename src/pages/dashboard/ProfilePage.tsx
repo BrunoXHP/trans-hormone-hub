@@ -11,23 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useProfile } from "@/hooks/useProfile";
-import { useSettings } from "@/hooks/useSettings";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [isEditingAccount, setIsEditingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { profileData, updateProfile, saveProfile, updateAvatar } = useProfile();
-  const { accountSettings, saveAccountSettings, setAccountSettings } = useSettings();
 
   const handleSaveProfile = () => {
     setIsEditing(false);
     saveProfile();
-  };
-
-  const handleSaveAccount = async () => {
-    setIsEditingAccount(false);
-    await saveAccountSettings(accountSettings);
   };
 
   const handleAvatarClick = () => {
@@ -59,9 +51,8 @@ const ProfilePage = () => {
         </div>
 
         <Tabs defaultValue="personal">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="personal">Informações Pessoais</TabsTrigger>
-            <TabsTrigger value="account">Configurações de Conta</TabsTrigger>
             <TabsTrigger value="therapy">Terapia Hormonal</TabsTrigger>
             <TabsTrigger value="calendar">Agenda</TabsTrigger>
           </TabsList>
@@ -167,6 +158,22 @@ const ProfilePage = () => {
                     </div>
 
                     <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-foreground">Telefone</Label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={profileData.phone}
+                          onChange={(e) => updateProfile({ phone: e.target.value })}
+                          className="pl-10 bg-background border-border text-foreground"
+                          placeholder="(11) 99999-9999"
+                          disabled={!isEditing}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
                       <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
                       <Select 
                         value={profileData.gender}
@@ -185,7 +192,7 @@ const ProfilePage = () => {
                       </Select>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="birthdate" className="text-foreground">Data de Nascimento</Label>
                       <div className="relative">
                         <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -198,70 +205,6 @@ const ProfilePage = () => {
                           disabled={!isEditing}
                         />
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="account" className="mt-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Configurações de Conta</CardTitle>
-                  <CardDescription>Gerencie suas informações de contato e preferências</CardDescription>
-                </div>
-                <Button 
-                  variant={isEditingAccount ? "outline" : "default"}
-                  onClick={() => isEditingAccount ? handleSaveAccount() : setIsEditingAccount(true)}
-                >
-                  {isEditingAccount ? "Salvar" : "Editar"}
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="account-name" className="text-foreground">Nome completo</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        id="account-name" 
-                        value={accountSettings.name} 
-                        onChange={(e) => setAccountSettings({...accountSettings, name: e.target.value})}
-                        className="pl-10 bg-background border-border text-foreground"
-                        disabled={!isEditingAccount}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="account-email" className="text-foreground">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        id="account-email" 
-                        type="email" 
-                        value={accountSettings.email} 
-                        onChange={(e) => setAccountSettings({...accountSettings, email: e.target.value})}
-                        className="pl-10 bg-background border-border text-foreground"
-                        disabled={!isEditingAccount}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-foreground">Telefone</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input 
-                        id="phone" 
-                        value={accountSettings.phone} 
-                        onChange={(e) => setAccountSettings({...accountSettings, phone: e.target.value})}
-                        className="pl-10 bg-background border-border text-foreground"
-                        placeholder="(11) 99999-9999"
-                        disabled={!isEditingAccount}
-                      />
                     </div>
                   </div>
                 </div>

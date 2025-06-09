@@ -17,6 +17,7 @@ export type Database = {
           gender: string
           id: string
           name: string
+          phone: string | null
           updated_at: string | null
         }
         Insert: {
@@ -26,6 +27,7 @@ export type Database = {
           gender: string
           id: string
           name: string
+          phone?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -35,6 +37,7 @@ export type Database = {
           gender?: string
           id?: string
           name?: string
+          phone?: string | null
           updated_at?: string | null
         }
         Relationships: []

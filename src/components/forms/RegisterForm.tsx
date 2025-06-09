@@ -1,101 +1,94 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, User, Key, Calendar, Eye, EyeOff } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Mail, Key, User, Calendar, Phone, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [gender, setGender] = useState("");
-  const [customGender, setCustomGender] = useState("");
-  const [birthDate, setBirthDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  
-  const handleGenderChange = (value: string) => {
-    setGender(value);
-    if (value !== "outro") {
-      setCustomGender("");
-    }
-  };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
     if (password !== confirmPassword) {
       toast({
-        title: "Erro no cadastro",
+        title: "Erro",
         description: "As senhas não coincidem.",
         variant: "destructive",
       });
-      setIsLoading(false);
-      return;
-    }
-    
-    if (!name || !email || !password || !gender || !birthDate) {
-      toast({
-        title: "Erro no cadastro",
-        description: "Por favor, preencha todos os campos.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
       return;
     }
 
-    if (gender === "outro" && !customGender.trim()) {
+    if (password.length < 6) {
       toast({
-        title: "Erro no cadastro",
-        description: "Por favor, especifique sua identidade de gênero.",
+        title: "Erro",
+        description: "A senha deve ter pelo menos 6 caracteres.",
         variant: "destructive",
       });
-      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     try {
-      console.log('Attempting to register user with:', { name, email, gender: gender === "outro" ? customGender : gender, birthDate });
-      
-      const finalGender = gender === "outro" ? customGender : gender;
+      const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             name,
-            gender: finalGender,
+            gender,
             birth_date: birthDate,
-          },
-          emailRedirectTo: `${window.location.origin}/`,
-        },
+            phone
+          }
+        }
       });
 
       if (error) {
         console.error('Registration error:', error);
+        
+        if (error.message.includes('User already registered')) {
+          toast({
+            title: "Usuário já cadastrado",
+            description: "Este email já está em uso. Tente fazer login ou use outro email.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro no cadastro",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
+      if (data.user) {
         toast({
-          title: "Erro no cadastro",
-          description: error.message,
-          variant: "destructive",
+          title: "Cadastro realizado!",
+          description: "Bem-vindo ao Transcare! Você já pode começar a usar a plataforma.",
         });
-      } else if (data.user) {
-        console.log('User registered successfully:', data.user);
-        toast({
-          title: "Cadastro realizado com sucesso!",
-          description: "Verifique seu email para confirmar a conta e depois faça login.",
-        });
-        navigate("/login");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error('Unexpected error during registration:', error);
@@ -108,7 +101,7 @@ const RegisterForm = () => {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -117,8 +110,7 @@ const RegisterForm = () => {
           <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="name"
-            type="text"
-            placeholder="Seu nome"
+            placeholder="Seu nome completo"
             className="pl-10 bg-background border-border text-foreground placeholder:text-muted-foreground"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -126,7 +118,7 @@ const RegisterForm = () => {
           />
         </div>
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="email" className="text-foreground">Email</Label>
         <div className="relative">
@@ -142,13 +134,43 @@ const RegisterForm = () => {
           />
         </div>
       </div>
-      
+
       <div className="space-y-2">
-        <Label htmlFor="birth-date" className="text-foreground">Data de Nascimento</Label>
+        <Label htmlFor="phone" className="text-foreground">Telefone</Label>
+        <div className="relative">
+          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="(11) 99999-9999"
+            className="pl-10 bg-background border-border text-foreground placeholder:text-muted-foreground"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
+        <Select value={gender} onValueChange={setGender} required>
+          <SelectTrigger className="bg-background border-border text-foreground">
+            <SelectValue placeholder="Selecione sua identidade" />
+          </SelectTrigger>
+          <SelectContent className="bg-popover border-border">
+            <SelectItem value="trans-woman" className="text-popover-foreground hover:bg-accent">Mulher Trans</SelectItem>
+            <SelectItem value="trans-man" className="text-popover-foreground hover:bg-accent">Homem Trans</SelectItem>
+            <SelectItem value="non-binary" className="text-popover-foreground hover:bg-accent">Não-binário</SelectItem>
+            <SelectItem value="other" className="text-popover-foreground hover:bg-accent">Outro</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="birthDate" className="text-foreground">Data de Nascimento</Label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            id="birth-date"
+            id="birthDate"
             type="date"
             className="pl-10 bg-background border-border text-foreground"
             value={birthDate}
@@ -157,35 +179,7 @@ const RegisterForm = () => {
           />
         </div>
       </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
-        <Select value={gender} onValueChange={handleGenderChange} required>
-          <SelectTrigger className="bg-background border-border text-foreground">
-            <SelectValue placeholder="Selecione" />
-          </SelectTrigger>
-          <SelectContent className="bg-popover border-border">
-            <SelectItem value="mulher-trans" className="text-popover-foreground hover:bg-accent">Mulher Trans</SelectItem>
-            <SelectItem value="homem-trans" className="text-popover-foreground hover:bg-accent">Homem Trans</SelectItem>
-            <SelectItem value="nao-binario" className="text-popover-foreground hover:bg-accent">Não-binário</SelectItem>
-            <SelectItem value="outro" className="text-popover-foreground hover:bg-accent">Outro</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        {gender === "outro" && (
-          <div className="mt-2">
-            <Input
-              type="text"
-              placeholder="Especifique sua identidade de gênero"
-              className="bg-background border-border text-foreground placeholder:text-muted-foreground"
-              value={customGender}
-              onChange={(e) => setCustomGender(e.target.value)}
-              required
-            />
-          </div>
-        )}
-      </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="password" className="text-foreground">Senha</Label>
         <div className="relative">
@@ -213,13 +207,13 @@ const RegisterForm = () => {
           </Button>
         </div>
       </div>
-      
+
       <div className="space-y-2">
-        <Label htmlFor="confirm-password" className="text-foreground">Confirmar Senha</Label>
+        <Label htmlFor="confirmPassword" className="text-foreground">Confirmar Senha</Label>
         <div className="relative">
           <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            id="confirm-password"
+            id="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
             className="pl-10 pr-10 bg-background border-border text-foreground"
             value={confirmPassword}
@@ -241,19 +235,19 @@ const RegisterForm = () => {
           </Button>
         </div>
       </div>
-      
+
       <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
         {isLoading ? (
           <span className="flex items-center gap-2">
             <span className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></span>
-            Cadastrando...
+            Criando conta...
           </span>
         ) : (
-          "Cadastrar"
+          "Criar Conta"
         )}
       </Button>
-      
-      <div className="mt-4 text-center text-sm text-foreground">
+
+      <div className="text-center text-sm text-foreground">
         Já tem uma conta?{" "}
         <Link to="/login" className="text-primary hover:underline">
           Faça login

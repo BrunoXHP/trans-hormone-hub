@@ -11,6 +11,7 @@ interface Profile {
   email: string;
   gender: string;
   birth_date: string | null;
+  phone: string | null;
   created_at: string;
   updated_at: string;
 }

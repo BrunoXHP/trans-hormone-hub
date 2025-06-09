@@ -9,6 +9,7 @@ interface ProfileData {
   email: string;
   gender: string;
   birthdate: string;
+  phone: string;
   startDate: string;
   currentTherapy: string;
   avatar: string;
@@ -25,6 +26,7 @@ export const useProfile = () => {
       email: "",
       gender: "",
       birthdate: "",
+      phone: "",
       startDate: "",
       currentTherapy: "",
       avatar: "",
@@ -40,6 +42,7 @@ export const useProfile = () => {
         email: profile.email,
         gender: profile.gender,
         birthdate: profile.birth_date || "",
+        phone: profile.phone || "",
       }));
     }
   }, [profile]);
@@ -72,6 +75,7 @@ export const useProfile = () => {
           email: profileData.email,
           gender: profileData.gender,
           birth_date: profileData.birthdate || null,
+          phone: profileData.phone || null,
         })
         .eq('id', profile.id);
 
