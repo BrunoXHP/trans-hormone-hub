@@ -1,5 +1,8 @@
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 interface AgendaEvent {
   id: string;
@@ -7,43 +10,128 @@ interface AgendaEvent {
   date: string;
   time: string;
   description?: string;
+  user_id?: string;
 }
 
 export const useAgenda = () => {
-  const [events, setEvents] = useState<AgendaEvent[]>(() => {
-    const saved = localStorage.getItem('agendaEvents');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [events, setEvents] = useState<AgendaEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { profile } = useAuth();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    localStorage.setItem('agendaEvents', JSON.stringify(events));
-    console.log('Agenda events saved:', events);
-  }, [events]);
+  // Buscar eventos do usuário logado
+  const fetchEvents = async () => {
+    if (!profile?.id) return;
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('agenda_events')
+        .select('*')
+        .eq('user_id', profile.id)
+        .order('date', { ascending: true });
 
-  const addEvent = (event: Omit<AgendaEvent, 'id'>) => {
-    const newEvent = {
-      ...event,
-      id: Date.now().toString(),
-    };
-    setEvents(prev => [...prev, newEvent]);
+      if (error) {
+        console.error('Error fetching events:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao carregar eventos da agenda.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setEvents(data || []);
+      console.log('Events fetched:', data);
+    } catch (error) {
+      console.error('Unexpected error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeEvent = (id: string) => {
-    setEvents(prev => prev.filter(event => event.id !== id));
+  // Carregar eventos quando o usuário estiver disponível
+  useEffect(() => {
+    if (profile?.id) {
+      fetchEvents();
+    }
+  }, [profile?.id]);
+
+  const addEvent = async (event: Omit<AgendaEvent, 'id' | 'user_id'>) => {
+    if (!profile?.id) {
+      toast({
+        title: "Erro",
+        description: "Usuário não autenticado.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('agenda_events')
+        .insert([{
+          ...event,
+          user_id: profile.id,
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding event:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao adicionar evento.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setEvents(prev => [...prev, data]);
+      console.log('Event added:', data);
+    } catch (error) {
+      console.error('Unexpected error adding event:', error);
+    }
+  };
+
+  const removeEvent = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('agenda_events')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error removing event:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao remover evento.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setEvents(prev => prev.filter(event => event.id !== id));
+      console.log('Event removed:', id);
+    } catch (error) {
+      console.error('Unexpected error removing event:', error);
+    }
   };
 
   const getUpcomingEvents = (limit: number = 3) => {
     const now = new Date();
     return events
-      .filter(event => new Date(event.date + 'T' + event.time) > now)
-      .sort((a, b) => new Date(a.date + 'T' + a.time).getTime() - new Date(b.date + 'T' + b.time).getTime())
+      .filter(event => new Date(event.date + 'T' + (event.time || '00:00')) > now)
+      .sort((a, b) => new Date(a.date + 'T' + (a.time || '00:00')).getTime() - new Date(b.date + 'T' + (b.time || '00:00')).getTime())
       .slice(0, limit);
   };
 
   return {
     events,
+    loading,
     addEvent,
     removeEvent,
     getUpcomingEvents,
+    refetch: fetchEvents,
   };
 };

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar, Plus } from "lucide-react";
 import { useAgenda } from "@/hooks/useAgenda";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const AddAgendaEventModal = () => {
   const [open, setOpen] = useState(false);
@@ -16,31 +16,23 @@ const AddAgendaEventModal = () => {
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
   const { addEvent } = useAgenda();
-  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title || !date || !time) {
-      toast({
-        title: "Erro",
-        description: "Por favor, preencha todos os campos obrigatórios.",
-        variant: "destructive",
-      });
+    if (!title || !date) {
+      toast.error("Por favor, preencha pelo menos o título e a data.");
       return;
     }
 
-    addEvent({
+    await addEvent({
       title,
       date,
       time,
       description,
     });
 
-    toast({
-      title: "Evento adicionado",
-      description: "Seu evento foi adicionado à agenda com sucesso.",
-    });
+    toast.success("Evento adicionado à agenda com sucesso!");
 
     // Reset form
     setTitle("");
@@ -91,13 +83,12 @@ const AddAgendaEventModal = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="time" className="text-foreground">Hora *</Label>
+            <Label htmlFor="time" className="text-foreground">Hora</Label>
             <Input
               id="time"
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              required
               className="text-foreground"
             />
           </div>

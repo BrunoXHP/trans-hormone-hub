@@ -1,11 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Trash2 } from "lucide-react";
+import { Calendar, Clock, Trash2, Loader2 } from "lucide-react";
 import { useAgenda } from "@/hooks/useAgenda";
 
 const AgendaSection = () => {
-  const { getUpcomingEvents, removeEvent } = useAgenda();
+  const { getUpcomingEvents, removeEvent, loading } = useAgenda();
   const upcomingEvents = getUpcomingEvents();
 
   const formatDate = (date: string) => {
@@ -19,6 +19,23 @@ const AgendaSection = () => {
   const formatTime = (time: string) => {
     return time;
   };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Calendar className="h-5 w-5" />
+            Próximos Eventos
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <span className="ml-2 text-muted-foreground">Carregando eventos...</span>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (upcomingEvents.length === 0) {
     return (
@@ -54,10 +71,12 @@ const AgendaSection = () => {
                   <Calendar className="h-3 w-3" />
                   {formatDate(event.date)}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {formatTime(event.time)}
-                </span>
+                {event.time && (
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {formatTime(event.time)}
+                  </span>
+                )}
               </div>
               {event.description && (
                 <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
