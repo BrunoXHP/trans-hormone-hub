@@ -31,26 +31,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/components/ui/sonner";
-
-// Tipos para os eventos da agenda
-interface AppointmentEvent {
-  id: string;
-  title: string;
-  date: Date;
-  time?: string;
-  type: "consulta" | "exame" | "medicação" | "outro";
-  location?: string;
-  notes?: string;
-}
+import { useAgenda } from "@/hooks/useAgenda";
 
 // Schema para o formulário de adição de evento
 const eventFormSchema = z.object({
   title: z.string().min(3, { message: "O título deve ter pelo menos 3 caracteres" }),
   date: z.date({ required_error: "A data é obrigatória" }),
   time: z.string().optional(),
-  type: z.enum(["consulta", "exame", "medicação", "outro"]),
-  location: z.string().optional(),
-  notes: z.string().optional(),
+  description: z.string().optional(),
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
@@ -58,34 +46,7 @@ type EventFormValues = z.infer<typeof eventFormSchema>;
 const CalendarPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-  const [events, setEvents] = useState<AppointmentEvent[]>([
-    {
-      id: "1",
-      title: "Consulta Endocrinologista",
-      date: new Date(2025, 4, 5),
-      time: "14:30",
-      type: "consulta",
-      location: "Hospital Central - Sala 302",
-      notes: "Levar exames recentes",
-    },
-    {
-      id: "2",
-      title: "Retirar medicação",
-      date: new Date(2025, 4, 15),
-      time: "10:00",
-      type: "medicação",
-      location: "Farmácia Popular",
-    },
-    {
-      id: "3",
-      title: "Exames de sangue",
-      date: new Date(2025, 4, 20),
-      time: "08:00",
-      type: "exame",
-      location: "Laboratório MedLife",
-      notes: "Jejum de 12 horas",
-    },
-  ]);
+  const { events, addEvent, removeEvent, getUpcomingEvents, getPastEvents } = useAgenda();
 
   // Configuração do formulário com React Hook Form
   const form = useForm<EventFormValues>({
@@ -94,27 +55,18 @@ const CalendarPage = () => {
       title: "",
       date: new Date(),
       time: "",
-      type: "outro",
-      location: "",
-      notes: "",
+      description: "",
     },
   });
 
   // Função para tratar a submissão do formulário
-  const onSubmit = (values: EventFormValues) => {
-    // Criar novo evento
-    const newEvent: AppointmentEvent = {
-      id: crypto.randomUUID(),
+  const onSubmit = async (values: EventFormValues) => {
+    await addEvent({
       title: values.title,
-      date: values.date,
-      time: values.time,
-      type: values.type,
-      location: values.location,
-      notes: values.notes,
-    };
-
-    // Adicionar o novo evento à lista
-    setEvents([...events, newEvent]);
+      date: values.date.toISOString().split('T')[0],
+      time: values.time || "",
+      description: values.description,
+    });
     
     // Fechar o diálogo e mostrar uma notificação de sucesso
     setIsAddEventOpen(false);
@@ -128,17 +80,21 @@ const CalendarPage = () => {
       title: "",
       date: date || new Date(),
       time: "",
-      type: "outro",
-      location: "",
-      notes: "",
+      description: "",
     });
     setIsAddEventOpen(true);
   };
 
   // Filtrar eventos pela data selecionada
   const selectedDateEvents = events.filter(
-    (event) => date && event.date.toDateString() === date.toDateString()
+    (event) => date && new Date(event.date).toDateString() === date.toDateString()
   );
+
+  const handleRemoveEvent = async (eventId: string) => {
+    if (window.confirm('Tem certeza que deseja remover este evento?')) {
+      await removeEvent(eventId);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -202,30 +158,26 @@ const CalendarPage = () => {
                       key={event.id}
                       className="flex items-start gap-4 p-3 rounded-md border"
                     >
-                      <div
-                        className={cn(
-                          "w-1.5 h-full rounded-full",
-                          event.type === "consulta" && "bg-blue-500",
-                          event.type === "exame" && "bg-green-500",
-                          event.type === "medicação" && "bg-purple-500",
-                          event.type === "outro" && "bg-gray-500"
-                        )}
-                      ></div>
                       <div className="flex-1">
                         <div className="flex justify-between">
                           <h3 className="font-medium">{event.title}</h3>
-                          <span className="text-sm text-muted-foreground">
-                            {event.time}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">
+                              {event.time}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveEvent(event.id)}
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10 h-6 w-6 p-0"
+                            >
+                              ×
+                            </Button>
+                          </div>
                         </div>
-                        {event.location && (
-                          <p className="text-sm text-muted-foreground">
-                            {event.location}
-                          </p>
-                        )}
-                        {event.notes && (
+                        {event.description && (
                           <p className="text-sm mt-2 text-muted-foreground">
-                            {event.notes}
+                            {event.description}
                           </p>
                         )}
                       </div>
@@ -261,44 +213,95 @@ const CalendarPage = () => {
                   <TabsTrigger value="passados">Eventos passados</TabsTrigger>
                 </TabsList>
                 <TabsContent value="próximos" className="space-y-4">
-                  {events
-                    .filter((event) => event.date >= new Date())
-                    .sort((a, b) => a.date.getTime() - b.date.getTime())
-                    .map((event) => (
-                      <div
-                        key={event.id}
-                        className="flex items-start gap-4 p-3 rounded-md border"
-                      >
-                        <div className="w-16 h-16 rounded bg-primary/10 flex flex-col items-center justify-center">
-                          <span className="text-sm font-medium">
-                            {format(event.date, "MMM", { locale: ptBR })}
-                          </span>
-                          <span className="text-xl font-bold">
-                            {format(event.date, "dd")}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-medium">{event.title}</h3>
-                          <div className="flex gap-4 mt-1">
-                            <span className="text-sm text-muted-foreground">
-                              {event.time}
-                            </span>
-                            {event.location && (
+                  {getUpcomingEvents(10).map((event) => (
+                    <div
+                      key={event.id}
+                      className="flex items-start gap-4 p-3 rounded-md border"
+                    >
+                      <div className="w-16 h-16 rounded bg-primary/10 flex flex-col items-center justify-center">
+                        <span className="text-sm font-medium">
+                          {format(new Date(event.date), "MMM", { locale: ptBR })}
+                        </span>
+                        <span className="text-xl font-bold">
+                          {format(new Date(event.date), "dd")}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-medium">{event.title}</h3>
+                            <div className="flex gap-4 mt-1">
                               <span className="text-sm text-muted-foreground">
-                                {event.location}
+                                {event.time}
                               </span>
+                            </div>
+                            {event.description && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {event.description}
+                              </p>
                             )}
                           </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveEvent(event.id)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            Remover
+                          </Button>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </TabsContent>
-                <TabsContent value="passados">
-                  <div className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      Histórico de eventos em desenvolvimento
-                    </p>
-                  </div>
+                <TabsContent value="passados" className="space-y-4">
+                  {getPastEvents().map((event) => (
+                    <div
+                      key={event.id}
+                      className="flex items-start gap-4 p-3 rounded-md border opacity-75"
+                    >
+                      <div className="w-16 h-16 rounded bg-muted flex flex-col items-center justify-center">
+                        <span className="text-sm font-medium">
+                          {format(new Date(event.date), "MMM", { locale: ptBR })}
+                        </span>
+                        <span className="text-xl font-bold">
+                          {format(new Date(event.date), "dd")}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-medium">{event.title}</h3>
+                            <div className="flex gap-4 mt-1">
+                              <span className="text-sm text-muted-foreground">
+                                {event.time}
+                              </span>
+                            </div>
+                            {event.description && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {event.description}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveEvent(event.id)}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            Remover
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {getPastEvents().length === 0 && (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        Nenhum evento passado encontrado
+                      </p>
+                    </div>
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -390,43 +393,7 @@ const CalendarPage = () => {
               
               <FormField
                 control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tipo</FormLabel>
-                    <FormControl>
-                      <select 
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                        {...field}
-                      >
-                        <option value="consulta">Consulta</option>
-                        <option value="exame">Exame</option>
-                        <option value="medicação">Medicação</option>
-                        <option value="outro">Outro</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Local</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ex: Hospital Central" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="notes"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Observações</FormLabel>

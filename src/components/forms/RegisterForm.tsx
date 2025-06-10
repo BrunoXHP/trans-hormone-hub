@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
+  const [customGender, setCustomGender] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -45,10 +45,20 @@ const RegisterForm = () => {
       return;
     }
 
+    if (gender === "other" && !customGender.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, especifique sua identidade de gênero.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const redirectUrl = `${window.location.origin}/`;
+      const finalGender = gender === "other" ? customGender : gender;
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -57,7 +67,7 @@ const RegisterForm = () => {
           emailRedirectTo: redirectUrl,
           data: {
             name,
-            gender,
+            gender: finalGender,
             birth_date: birthDate,
             phone
           }
@@ -163,6 +173,18 @@ const RegisterForm = () => {
             <SelectItem value="other" className="text-popover-foreground hover:bg-accent">Outro</SelectItem>
           </SelectContent>
         </Select>
+        
+        {gender === "other" && (
+          <div className="mt-2">
+            <Input
+              placeholder="Especifique sua identidade de gênero"
+              className="bg-background border-border text-foreground placeholder:text-muted-foreground"
+              value={customGender}
+              onChange={(e) => setCustomGender(e.target.value)}
+              required
+            />
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">

@@ -88,6 +88,10 @@ export const useAgenda = () => {
       }
 
       setEvents(prev => [...prev, data]);
+      toast({
+        title: "Sucesso",
+        description: "Evento adicionado com sucesso!",
+      });
       console.log('Event added:', data);
     } catch (error) {
       console.error('Unexpected error adding event:', error);
@@ -112,6 +116,10 @@ export const useAgenda = () => {
       }
 
       setEvents(prev => prev.filter(event => event.id !== id));
+      toast({
+        title: "Sucesso",
+        description: "Evento removido com sucesso!",
+      });
       console.log('Event removed:', id);
     } catch (error) {
       console.error('Unexpected error removing event:', error);
@@ -120,10 +128,29 @@ export const useAgenda = () => {
 
   const getUpcomingEvents = (limit: number = 3) => {
     const now = new Date();
+    now.setHours(0, 0, 0, 0); // Set to start of today
+    
     return events
-      .filter(event => new Date(event.date + 'T' + (event.time || '00:00')) > now)
+      .filter(event => {
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate >= now;
+      })
       .sort((a, b) => new Date(a.date + 'T' + (a.time || '00:00')).getTime() - new Date(b.date + 'T' + (b.time || '00:00')).getTime())
       .slice(0, limit);
+  };
+
+  const getPastEvents = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Set to start of today
+    
+    return events
+      .filter(event => {
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate < now;
+      })
+      .sort((a, b) => new Date(b.date + 'T' + (b.time || '00:00')).getTime() - new Date(a.date + 'T' + (a.time || '00:00')).getTime());
   };
 
   return {
@@ -132,6 +159,7 @@ export const useAgenda = () => {
     addEvent,
     removeEvent,
     getUpcomingEvents,
+    getPastEvents,
     refetch: fetchEvents,
   };
 };

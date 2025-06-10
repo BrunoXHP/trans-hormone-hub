@@ -20,6 +20,12 @@ const AgendaSection = () => {
     return time;
   };
 
+  const handleRemoveEvent = async (eventId: string) => {
+    if (window.confirm('Tem certeza que deseja remover este evento?')) {
+      await removeEvent(eventId);
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -85,7 +91,7 @@ const AgendaSection = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => removeEvent(event.id)}
+              onClick={() => handleRemoveEvent(event.id)}
               className="text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="h-4 w-4" />
