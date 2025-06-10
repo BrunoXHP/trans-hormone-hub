@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -6,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, UserRound, Heart, Calendar, Users, CalendarDays, Share } from "lucide-react";
+import { Heart, Calendar, Users, CalendarDays, Share } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { useCommunityPosts } from "@/hooks/useCommunityPosts";
+import CommentSection from "@/components/community/CommentSection";
 
 interface Post {
   id: string;
@@ -47,38 +48,7 @@ const CommunityPage = () => {
   const [newPost, setNewPost] = useState("");
   const [searchGroup, setSearchGroup] = useState("");
   const [searchEvent, setSearchEvent] = useState("");
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      id: "1",
-      author: "Marina Costa",
-      avatar: "MC",
-      content: "Acabei de começar minha terapia hormonal! Alguém tem dicas para os primeiros meses?",
-      timestamp: new Date(2025, 4, 3, 14, 35),
-      likes: 24,
-      comments: 7,
-      liked: false
-    },
-    {
-      id: "2",
-      author: "Pedro Almeida",
-      avatar: "PA",
-      content: "Encontrei um grupo de apoio incrível na minha cidade. Estou muito feliz por ter uma comunidade que me entende!",
-      timestamp: new Date(2025, 4, 2, 9, 12),
-      likes: 18,
-      comments: 4,
-      liked: true
-    },
-    {
-      id: "3",
-      author: "Julia Mendes",
-      avatar: "JM",
-      content: "Alguém aqui já passou pelo processo de retificação de documentos? Estou precisando de orientação sobre os procedimentos.",
-      timestamp: new Date(2025, 4, 1, 16, 22),
-      likes: 31,
-      comments: 12,
-      liked: false
-    }
-  ]);
+  const { posts, createPost, toggleLike, addComment, removeComment } = useCommunityPosts();
   
   const [groups, setGroups] = useState<Group[]>([
     {
@@ -153,35 +123,12 @@ const CommunityPage = () => {
 
   const handleCreatePost = () => {
     if (newPost.trim() === "") return;
-    
-    const post: Post = {
-      id: Date.now().toString(),
-      author: "Você",
-      avatar: "VC",
-      content: newPost,
-      timestamp: new Date(),
-      likes: 0,
-      comments: 0,
-      liked: false
-    };
-    
-    setPosts([post, ...posts]);
+    createPost(newPost);
     setNewPost("");
   };
 
   const handleLikePost = (id: string) => {
-    setPosts(
-      posts.map(post => {
-        if (post.id === id) {
-          return {
-            ...post,
-            likes: post.liked ? post.likes - 1 : post.likes + 1,
-            liked: !post.liked
-          };
-        }
-        return post;
-      })
-    );
+    toggleLike(id);
   };
 
   const filteredGroups = searchGroup
@@ -257,7 +204,7 @@ const CommunityPage = () => {
                             </span>
                           </div>
                           <p className="mb-4">{post.content}</p>
-                          <div className="flex gap-4">
+                          <div className="flex gap-4 mb-2">
                             <button 
                               className={`flex items-center gap-1 text-sm ${post.liked ? 'text-primary' : 'text-muted-foreground'}`}
                               onClick={() => handleLikePost(post.id)}
@@ -265,11 +212,13 @@ const CommunityPage = () => {
                               <Heart size={18} className={post.liked ? 'fill-primary' : ''} />
                               <span>{post.likes}</span>
                             </button>
-                            <button className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <MessageSquare size={18} />
-                              <span>{post.comments}</span>
-                            </button>
                           </div>
+                          <CommentSection 
+                            postId={post.id}
+                            comments={post.comments}
+                            onAddComment={addComment}
+                            onRemoveComment={removeComment}
+                          />
                         </div>
                       </div>
                     </CardContent>
@@ -418,3 +367,5 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
+
+// ... keep existing code (CommentSection component)
