@@ -69,7 +69,7 @@ export const useCommunityPosts = () => {
     
     try {
       const { data, error } = await supabase
-        .from('post_comments')
+        .from('post_comments' as any)
         .select(`
           *,
           profiles:user_id (
@@ -139,7 +139,7 @@ export const useCommunityPosts = () => {
 
     try {
       const { data, error } = await supabase
-        .from('post_comments')
+        .from('post_comments' as any)
         .insert([{
           content: content.trim(),
           user_id: profile.id,
@@ -193,7 +193,7 @@ export const useCommunityPosts = () => {
   const removeComment = async (commentId: string, postId: string) => {
     try {
       const { error } = await supabase
-        .from('post_comments')
+        .from('post_comments' as any)
         .delete()
         .eq('id', commentId);
 
