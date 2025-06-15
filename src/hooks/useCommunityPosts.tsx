@@ -1,32 +1,11 @@
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-
-interface Comment {
-  id: string;
-  content: string;
-  user_id: string;
-  post_id: string;
-  created_at: string;
-  user_name: string;
-  user_avatar: string;
-}
-
-interface Post {
-  id: string;
-  author: string;
-  avatar: string;
-  content: string;
-  timestamp: Date;
-  likes: number;
-  comments: Comment[];
-  liked: boolean;
-  user_id?: string;
-}
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { usePostComments } from "./usePostComments";
+import { Comment, Post } from "./types/communityPostTypes";
 
 export const useCommunityPosts = () => {
+  const { profile } = useAuth();
   const [posts, setPosts] = useState<Post[]>([
     {
       id: "1",
@@ -60,186 +39,57 @@ export const useCommunityPosts = () => {
     }
   ]);
   const [loading, setLoading] = useState(false);
-  const { profile } = useAuth();
-  const { toast } = useToast();
 
-  // Carregar comentários do banco de dados
-  const fetchComments = async () => {
-    if (!profile?.id) return;
-    
-    try {
-      // Fixed: use correct join syntax for Supabase
-      const { data, error } = await supabase
-        .from('post_comments')
-        .select(`
-          *,
-          profiles!user_id (
-            name
-          )
-        `)
-        .order('created_at', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching comments:', error);
-        return;
-      }
-
-      // Agrupar comentários por post
-      const commentsByPost: { [key: string]: Comment[] } = {};
-      data?.forEach((comment: any) => {
-        // Safely get the joined profile name if available
-        const user_name = (comment.profiles && typeof comment.profiles === 'object' && 'name' in comment.profiles)
-          ? comment.profiles.name
-          : 'Usuário';
-        const user_avatar = user_name ? user_name.charAt(0) : 'U';
-
-        if (!commentsByPost[comment.post_id]) {
-          commentsByPost[comment.post_id] = [];
-        }
-        commentsByPost[comment.post_id].push({
-          id: comment.id,
-          content: comment.content,
-          user_id: comment.user_id,
-          post_id: comment.post_id,
-          created_at: comment.created_at,
-          user_name,
-          user_avatar
-        });
-      });
-
-      setPosts(prevPosts => 
-        prevPosts.map(post => ({
+  // Funções de comentário separadas
+  const { fetchComments, addComment: addCommentDb, removeComment: removeCommentDb } = usePostComments({
+    profileId: profile?.id,
+    onCommentsFetched: (commentsByPost) =>
+      setPosts((prev) =>
+        prev.map((post) => ({
           ...post,
-          comments: commentsByPost[post.id] || []
+          comments: commentsByPost[post.id] || [],
         }))
-      );
-    } catch (error) {
-      console.error('Unexpected error fetching comments:', error);
-    }
-  };
+      ),
+    onCommentAdded: (postId, newComment) =>
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? { ...post, comments: [...post.comments, newComment] }
+            : post
+        )
+      ),
+    onCommentRemoved: (postId, commentId) =>
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: post.comments.filter((c) => c.id !== commentId),
+              }
+            : post
+        )
+      ),
+  });
 
   useEffect(() => {
     if (profile?.id) {
       fetchComments();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
 
-  const addComment = async (postId: string, content: string) => {
-    if (!profile?.id) {
-      toast({
-        title: "Erro",
-        description: "Usuário não autenticado.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!content.trim()) {
-      toast({
-        title: "Erro",
-        description: "O comentário não pode estar vazio.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      // Fixed: use correct join syntax after insert
-      const { data, error } = await supabase
-        .from('post_comments')
-        .insert([{
-          content: content.trim(),
-          user_id: profile.id,
-          post_id: postId,
-        }])
-        .select(`
-          *,
-          profiles!user_id (
-            name
-          )
-        `)
-        .single();
-
-      if (error) {
-        console.error('Error adding comment:', error);
-        toast({
-          title: "Erro",
-          description: "Erro ao adicionar comentário.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Safely get the joined profile name if available
-      const user_name = (data.profiles && typeof data.profiles === 'object' && 'name' in data.profiles)
-        ? data.profiles.name
-        : 'Usuário';
-      const user_avatar = user_name ? user_name.charAt(0) : 'U';
-
-      const newComment: Comment = {
-        id: data.id,
-        content: data.content,
-        user_id: data.user_id,
-        post_id: data.post_id,
-        created_at: data.created_at,
-        user_name,
-        user_avatar
-      };
-
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === postId
-            ? { ...post, comments: [...post.comments, newComment] }
-            : post
-        )
-      );
-
-      toast({
-        title: "Sucesso",
-        description: "Comentário adicionado com sucesso!",
-      });
-    } catch (error) {
-      console.error('Unexpected error adding comment:', error);
-    }
+  const addComment = (postId: string, content: string) => {
+    if (!profile?.id) return;
+    addCommentDb(postId, content, profile);
   };
 
-  const removeComment = async (commentId: string, postId: string) => {
-    try {
-      const { error } = await supabase
-        .from('post_comments' as any)
-        .delete()
-        .eq('id', commentId);
-
-      if (error) {
-        console.error('Error removing comment:', error);
-        toast({
-          title: "Erro",
-          description: "Erro ao remover comentário.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === postId
-            ? { ...post, comments: post.comments.filter(comment => comment.id !== commentId) }
-            : post
-        )
-      );
-
-      toast({
-        title: "Sucesso",
-        description: "Comentário removido com sucesso!",
-      });
-    } catch (error) {
-      console.error('Unexpected error removing comment:', error);
-    }
+  const removeComment = (commentId: string, postId: string) => {
+    removeCommentDb(commentId, postId);
   };
 
   const createPost = (content: string) => {
     if (!content.trim()) return;
-    
+
     const post: Post = {
       id: Date.now().toString(),
       author: profile?.name || "Você",
@@ -249,20 +99,20 @@ export const useCommunityPosts = () => {
       likes: 0,
       comments: [],
       liked: false,
-      user_id: profile?.id
+      user_id: profile?.id,
     };
-    
+
     setPosts([post, ...posts]);
   };
 
   const toggleLike = (id: string) => {
     setPosts(
-      posts.map(post => {
+      posts.map((post) => {
         if (post.id === id) {
           return {
             ...post,
             likes: post.liked ? post.likes - 1 : post.likes + 1,
-            liked: !post.liked
+            liked: !post.liked,
           };
         }
         return post;
