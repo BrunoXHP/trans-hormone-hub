@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -57,14 +58,13 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
       const finalGender = gender === "other" ? customGender : gender;
       
+      // Configurar o cadastro para exigir confirmação de email
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: {
             name,
             gender: finalGender,
@@ -94,11 +94,22 @@ const RegisterForm = () => {
       }
 
       if (data.user) {
-        toast({
-          title: "Cadastro realizado!",
-          description: "Bem-vindo ao Transcare! Você já pode começar a usar a plataforma.",
-        });
-        navigate("/dashboard");
+        // Se o usuário foi criado mas não está confirmado
+        if (!data.user.email_confirmed_at) {
+          toast({
+            title: "Cadastro realizado com sucesso!",
+            description: "Verifique seu email para ativar sua conta. Em seguida, faça login.",
+          });
+        } else {
+          // Se por algum motivo o email já está confirmado
+          toast({
+            title: "Cadastro realizado com sucesso!",
+            description: "Sua conta foi criada. Agora você pode fazer login.",
+          });
+        }
+        
+        // Redirecionar para a página de login
+        navigate("/login");
       }
     } catch (error) {
       console.error('Unexpected error during registration:', error);
