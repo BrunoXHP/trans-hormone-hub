@@ -7,6 +7,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateProfileCompletion } from "@/utils/profileCompletion";
+import UserGroupsEventsSection from "@/components/dashboard/UserGroupsEventsSection";
+
 const DashboardHome = () => {
   const {
     profile,
@@ -117,7 +119,12 @@ const DashboardHome = () => {
             </CardContent>
           </Card>
         </div>
+        
+        {/* NOVA SESSÃO: Grupos e Eventos do usuário */}
+        <UserGroupsEventsSection />
+
         <AgendaSection />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
