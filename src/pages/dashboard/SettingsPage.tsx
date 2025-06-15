@@ -105,32 +105,12 @@ const SettingsPage = () => {
               <CardDescription>Configure sua preferência de aparência</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Privacidade</h3>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="data-sharing">Compartilhamento de dados</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Compartilhar dados anônimos para melhorar o serviço
-                    </p>
-                  </div>
-                  <Switch id="data-sharing" checked={privacySettings.shareData} onCheckedChange={() => togglePrivacy("shareData")} />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="research">Pesquisas</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Permitir uso de dados para pesquisas acadêmicas
-                    </p>
-                  </div>
-                  <Switch id="research" checked={privacySettings.allowResearch} onCheckedChange={() => togglePrivacy("allowResearch")} />
-                </div>
-              </div>
               
-              <Separator />
+              
+              
               
               <div className="space-y-4">
-                <h3 className="text-sm font-medium">Tema</h3>
+                
                 <div className="grid grid-cols-3 gap-2">
                   <Button variant={theme === "light" ? "default" : "outline"} className="w-full" onClick={() => handleThemeChange("light")}>
                     Claro
