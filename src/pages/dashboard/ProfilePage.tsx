@@ -8,9 +8,53 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, Save } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+
+const FIELD_TO_LABEL: Record<string, string> = {
+  name: "name",
+  email: "email",
+  gender: "gender",
+  birthdate: "birthdate",
+  phone: "phone",
+  startDate: "startDate",
+  currentTherapy: "currentTherapy",
+  avatar: "avatar",
+};
 
 const ProfilePage = () => {
   const { profileData, updateProfile, saveProfile, updateAvatar } = useProfile();
+  const location = useLocation();
+
+  // Refs de campos para rolagem automática
+  const refs: Record<string, React.RefObject<HTMLInputElement | HTMLSelectElement>> = {
+    name: useRef<HTMLInputElement>(null),
+    email: useRef<HTMLInputElement>(null),
+    gender: useRef<HTMLButtonElement>(null),
+    birthdate: useRef<HTMLInputElement>(null),
+    phone: useRef<HTMLInputElement>(null),
+    startDate: useRef<HTMLInputElement>(null),
+    currentTherapy: useRef<HTMLButtonElement>(null),
+    avatar: useRef<HTMLDivElement>(null),
+  };
+
+  // Detecta search param "focus" e rola até o campo
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const focus = params.get("focus");
+    if (focus && refs[focus]) {
+      setTimeout(() => {
+        const node = refs[focus]?.current;
+        if (node) {
+          node.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Para dar realce visual
+          node.classList.add("ring-2", "ring-primary");
+          setTimeout(() => node.classList.remove("ring-2", "ring-primary"), 2200);
+          if ("focus" in node) (node as HTMLElement).focus();
+        }
+      }, 280); // Para garantir que o layout foi montado
+    }
+  }, [location.search]);
 
   const handleInputChange = (field: string, value: string) => {
     updateProfile({ [field]: value });
@@ -57,7 +101,7 @@ const ProfilePage = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Avatar dentro das informações pessoais */}
-                <div className="flex flex-col items-center pb-2">
+                <div className="flex flex-col items-center pb-2" ref={refs.avatar}>
                   <div className="relative">
                     <Avatar className="h-24 w-24">
                       <AvatarImage src={profileData.avatar} />
@@ -88,6 +132,7 @@ const ProfilePage = () => {
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       placeholder="Seu nome completo"
                       className="text-foreground"
+                      ref={refs.name}
                     />
                   </div>
                   
@@ -100,6 +145,7 @@ const ProfilePage = () => {
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="seu@email.com"
                       className="text-foreground"
+                      ref={refs.email}
                     />
                   </div>
                 </div>
@@ -108,7 +154,7 @@ const ProfilePage = () => {
                   <div className="space-y-2">
                     <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
                     <Select value={profileData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                      <SelectTrigger className="text-foreground">
+                      <SelectTrigger className="text-foreground" ref={refs.gender}>
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                       <SelectContent>
@@ -128,6 +174,7 @@ const ProfilePage = () => {
                       value={profileData.birthdate}
                       onChange={(e) => handleInputChange('birthdate', e.target.value)}
                       className="text-foreground"
+                      ref={refs.birthdate}
                     />
                   </div>
                 </div>
@@ -141,6 +188,7 @@ const ProfilePage = () => {
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     placeholder="(11) 99999-9999"
                     className="text-foreground"
+                    ref={refs.phone}
                   />
                 </div>
               </CardContent>
@@ -161,13 +209,14 @@ const ProfilePage = () => {
                       value={profileData.startDate}
                       onChange={(e) => handleInputChange('startDate', e.target.value)}
                       className="text-foreground"
+                      ref={refs.startDate}
                     />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="currentTherapy" className="text-foreground">Terapia Atual</Label>
                     <Select value={profileData.currentTherapy} onValueChange={(value) => handleInputChange('currentTherapy', value)}>
-                      <SelectTrigger className="text-foreground">
+                      <SelectTrigger className="text-foreground" ref={refs.currentTherapy}>
                         <SelectValue placeholder="Selecione" />
                       </SelectTrigger>
                       <SelectContent>
@@ -198,4 +247,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
