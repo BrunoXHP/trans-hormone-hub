@@ -49,41 +49,36 @@ const ProfilePage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Avatar Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-foreground">Foto do Perfil</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center space-y-4">
-              <div className="relative">
-                <Avatar className="h-24 w-24">
-                  <AvatarImage src={profileData.avatar} />
-                  <AvatarFallback className="text-2xl bg-primary/20 text-primary">
-                    {profileData.name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full"
-                  onClick={handleAvatarClick}
-                >
-                  <Camera className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground text-center">
-                Clique no ícone da câmera para alterar sua foto
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Personal Information */}
+          {/* Informações Pessoais com Avatar */}
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-foreground">Informações Pessoais</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
+                {/* Avatar dentro das informações pessoais */}
+                <div className="flex flex-col items-center pb-2">
+                  <div className="relative">
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src={profileData.avatar} />
+                      <AvatarFallback className="text-2xl bg-primary/20 text-primary">
+                        {profileData.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full"
+                      onClick={handleAvatarClick}
+                    >
+                      <Camera className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-center mt-2">
+                    Clique no ícone da câmera para alterar sua foto
+                  </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-foreground">Nome Completo</Label>
@@ -151,7 +146,7 @@ const ProfilePage = () => {
               </CardContent>
             </Card>
 
-            {/* Therapy Information */}
+            {/* Informações da Terapia */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-foreground">Informações da Terapia</CardTitle>
@@ -195,6 +190,7 @@ const ProfilePage = () => {
               </Button>
             </div>
           </div>
+          {/* Removido o Card extra da foto do perfil */}
         </div>
       </div>
     </DashboardLayout>
@@ -202,3 +198,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
