@@ -68,11 +68,12 @@ export const useCommunityPosts = () => {
     if (!profile?.id) return;
     
     try {
+      // Fixed: use correct join syntax for Supabase
       const { data, error } = await supabase
-        .from('post_comments' as any)
+        .from('post_comments')
         .select(`
           *,
-          profiles:user_id (
+          profiles!user_id (
             name
           )
         `)
@@ -100,7 +101,6 @@ export const useCommunityPosts = () => {
         });
       });
 
-      // Atualizar posts com comentários
       setPosts(prevPosts => 
         prevPosts.map(post => ({
           ...post,
@@ -138,8 +138,9 @@ export const useCommunityPosts = () => {
     }
 
     try {
+      // Fixed: use correct join syntax after insert
       const { data, error } = await supabase
-        .from('post_comments' as any)
+        .from('post_comments')
         .insert([{
           content: content.trim(),
           user_id: profile.id,
@@ -147,7 +148,7 @@ export const useCommunityPosts = () => {
         }])
         .select(`
           *,
-          profiles:user_id (
+          profiles!user_id (
             name
           )
         `)
