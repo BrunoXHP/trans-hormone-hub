@@ -76,7 +76,8 @@ const RegisterForm = () => {
             gender: finalGender,
             birth_date: birthDate,
             phone
-          }
+          },
+          emailRedirectTo: `${window.location.origin}/email-confirmation`
         }
       });
 
