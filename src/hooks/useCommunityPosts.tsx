@@ -87,6 +87,12 @@ export const useCommunityPosts = () => {
       // Agrupar comentários por post
       const commentsByPost: { [key: string]: Comment[] } = {};
       data?.forEach((comment: any) => {
+        // Safely get the joined profile name if available
+        const user_name = (comment.profiles && typeof comment.profiles === 'object' && 'name' in comment.profiles)
+          ? comment.profiles.name
+          : 'Usuário';
+        const user_avatar = user_name ? user_name.charAt(0) : 'U';
+
         if (!commentsByPost[comment.post_id]) {
           commentsByPost[comment.post_id] = [];
         }
@@ -96,8 +102,8 @@ export const useCommunityPosts = () => {
           user_id: comment.user_id,
           post_id: comment.post_id,
           created_at: comment.created_at,
-          user_name: comment.profiles?.name || 'Usuário',
-          user_avatar: comment.profiles?.name?.charAt(0) || 'U'
+          user_name,
+          user_avatar
         });
       });
 
@@ -164,14 +170,20 @@ export const useCommunityPosts = () => {
         return;
       }
 
+      // Safely get the joined profile name if available
+      const user_name = (data.profiles && typeof data.profiles === 'object' && 'name' in data.profiles)
+        ? data.profiles.name
+        : 'Usuário';
+      const user_avatar = user_name ? user_name.charAt(0) : 'U';
+
       const newComment: Comment = {
         id: data.id,
         content: data.content,
         user_id: data.user_id,
         post_id: data.post_id,
         created_at: data.created_at,
-        user_name: data.profiles?.name || 'Usuário',
-        user_avatar: data.profiles?.name?.charAt(0) || 'U'
+        user_name,
+        user_avatar
       };
 
       setPosts(prevPosts =>
