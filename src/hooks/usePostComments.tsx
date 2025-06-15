@@ -1,179 +1,199 @@
 
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Comment } from "./types/communityPostTypes";
-import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
-export const usePostComments = ({
-  profileId,
-  onCommentsFetched,
-  onCommentAdded,
-  onCommentRemoved,
-}: {
-  profileId: string | undefined;
-  onCommentsFetched?: (commentsByPost: { [key: string]: Comment[] }) => void;
-  onCommentAdded?: (postId: string, comment: Comment) => void;
-  onCommentRemoved?: (postId: string, commentId: string) => void;
-}) => {
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+  profiles?: {
+    name: string;
+    email: string;
+  } | null;
+}
+
+export const usePostComments = (postId: string) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
 
-  // Carregar comentários do banco de dados
   const fetchComments = async () => {
-    if (!profileId) return;
     try {
+      console.log('Fetching comments for post:', postId);
+      
       const { data, error } = await supabase
         .from('post_comments')
         .select(`
           *,
-          profiles!user_id (
-            name
+          profiles (
+            name,
+            email
           )
         `)
+        .eq('post_id', postId)
         .order('created_at', { ascending: true });
 
       if (error) {
         console.error('Error fetching comments:', error);
-        return;
-      }
-
-      // Agrupar comentários por post
-      const commentsByPost: { [key: string]: Comment[] } = {};
-      data?.forEach((comment: any) => {
-        const user_name = 
-          comment.profiles && 
-          typeof comment.profiles === "object" && 
-          'name' in comment.profiles && 
-          comment.profiles.name
-            ? String(comment.profiles.name)
-            : "Usuário";
-        const user_avatar = user_name ? user_name.charAt(0) : "U";
-
-        if (!commentsByPost[comment.post_id]) {
-          commentsByPost[comment.post_id] = [];
-        }
-        commentsByPost[comment.post_id].push({
-          id: comment.id,
-          content: comment.content,
-          user_id: comment.user_id,
-          post_id: comment.post_id,
-          created_at: comment.created_at,
-          user_name,
-          user_avatar,
-        });
-      });
-
-      onCommentsFetched && onCommentsFetched(commentsByPost);
-    } catch (error) {
-      console.error("Unexpected error fetching comments:", error);
-    }
-  };
-
-  const addComment = async (postId: string, content: string, profile: { id: string, name?: string }) => {
-    if (!profile?.id) {
-      toast({
-        title: "Erro",
-        description: "Usuário não autenticado.",
-        variant: "destructive",
-      });
-      return;
-    }
-    if (!content.trim()) {
-      toast({
-        title: "Erro",
-        description: "O comentário não pode estar vazio.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from("post_comments")
-        .insert([
-          {
-            content: content.trim(),
-            user_id: profile.id,
-            post_id: postId,
-          },
-        ])
-        .select(
-          `
-          *,
-          profiles!user_id (
-            name
-          )
-        `
-        )
-        .maybeSingle();
-
-      if (error || !data) {
-        console.error("Error adding comment:", error);
         toast({
           title: "Erro",
-          description: "Erro ao adicionar comentário.",
+          description: "Não foi possível carregar os comentários.",
           variant: "destructive",
         });
         return;
       }
 
-      const user_name = 
-        data.profiles && 
-        typeof data.profiles === "object" && 
-        'name' in data.profiles && 
-        data.profiles.name
-          ? String(data.profiles.name)
-          : "Usuário";
-      const user_avatar = user_name ? user_name.charAt(0) : "U";
-
-      const newComment: Comment = {
-        id: data.id,
-        content: data.content,
-        user_id: data.user_id,
-        post_id: data.post_id,
-        created_at: data.created_at,
-        user_name,
-        user_avatar,
-      };
-      onCommentAdded && onCommentAdded(postId, newComment);
-      toast({
-        title: "Sucesso",
-        description: "Comentário adicionado com sucesso!",
-      });
+      console.log('Comments fetched:', data);
+      setComments(data || []);
     } catch (error) {
-      console.error("Unexpected error adding comment:", error);
+      console.error('Unexpected error fetching comments:', error);
+      toast({
+        title: "Erro",
+        description: "Erro inesperado ao carregar comentários.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const removeComment = async (commentId: string, postId: string) => {
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
+
+  const addComment = async (content: string) => {
     try {
-      const { error } = await supabase
-        .from("post_comments")
-        .delete()
-        .eq("id", commentId);
+      setSubmitting(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Erro",
+          description: "Você precisa estar logado para comentar.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      console.log('Adding comment for user:', user.id, 'on post:', postId);
+
+      const { data, error } = await supabase
+        .from('post_comments')
+        .insert({
+          post_id: postId,
+          user_id: user.id,
+          content: content.trim()
+        })
+        .select(`
+          *,
+          profiles (
+            name,
+            email
+          )
+        `)
+        .single();
 
       if (error) {
-        console.error("Error removing comment:", error);
+        console.error('Error adding comment:', error);
         toast({
           title: "Erro",
-          description: "Erro ao remover comentário.",
+          description: "Não foi possível adicionar o comentário.",
           variant: "destructive",
         });
-        return;
+        return false;
       }
-      onCommentRemoved && onCommentRemoved(postId, commentId);
 
+      console.log('Comment added successfully:', data);
+      
+      // Add the new comment to the local state
+      setComments(prev => [...prev, data]);
+      
       toast({
-        title: "Sucesso",
-        description: "Comentário removido com sucesso!",
+        title: "Comentário adicionado",
+        description: "Seu comentário foi publicado com sucesso.",
       });
+      
+      return true;
     } catch (error) {
-      console.error("Unexpected error removing comment:", error);
+      console.error('Unexpected error adding comment:', error);
+      toast({
+        title: "Erro",
+        description: "Erro inesperado ao adicionar comentário.",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const deleteComment = async (commentId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Erro",
+          description: "Você precisa estar logado para excluir comentários.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      console.log('Deleting comment:', commentId, 'by user:', user.id);
+
+      const { error } = await supabase
+        .from('post_comments')
+        .delete()
+        .eq('id', commentId)
+        .eq('user_id', user.id); // Ensure user can only delete their own comments
+
+      if (error) {
+        console.error('Error deleting comment:', error);
+        toast({
+          title: "Erro",
+          description: "Não foi possível excluir o comentário.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      console.log('Comment deleted successfully');
+      
+      // Remove the comment from local state
+      setComments(prev => prev.filter(comment => comment.id !== commentId));
+      
+      toast({
+        title: "Comentário excluído",
+        description: "O comentário foi removido com sucesso.",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Unexpected error deleting comment:', error);
+      toast({
+        title: "Erro",
+        description: "Erro inesperado ao excluir comentário.",
+        variant: "destructive",
+      });
+      return false;
     }
   };
 
   return {
-    fetchComments,
+    comments: comments.map(comment => ({
+      ...comment,
+      author: comment.profiles?.name || 'Usuário',
+      email: comment.profiles?.email || ''
+    })),
+    loading,
+    submitting,
     addComment,
-    removeComment,
+    deleteComment,
+    refreshComments: fetchComments
   };
 };

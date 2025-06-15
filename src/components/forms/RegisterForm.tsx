@@ -59,6 +59,7 @@ const RegisterForm = () => {
     try {
       const finalGender = gender === "other" ? customGender : gender;
       
+      console.log('=== INÍCIO DO CADASTRO ===');
       console.log('Tentando cadastrar usuário com dados:', {
         email,
         name,
@@ -66,6 +67,9 @@ const RegisterForm = () => {
         birth_date: birthDate,
         phone
       });
+
+      // Primeiro, verificar se já existe um usuário com este email (incluindo deletados)
+      console.log('Verificando se email já existe...');
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -81,30 +85,53 @@ const RegisterForm = () => {
         }
       });
 
+      console.log('Resposta do signUp:', { data, error });
+
       if (error) {
-        console.error('Registration error:', error);
+        console.error('=== ERRO NO SIGNUP ===');
+        console.error('Erro completo:', error);
+        console.error('Código do erro:', error.message);
+        console.error('Status do erro:', error.status);
         
-        if (error.message.includes('User already registered')) {
+        // Tratar erros específicos para contas excluídas
+        if (error.message.includes('User already registered') || 
+            error.message.includes('email already exists') ||
+            error.message.includes('already been registered')) {
+          console.log('ERRO: Email já cadastrado - pode ser conta excluída');
           toast({
-            title: "Usuário já cadastrado",
-            description: "Este email já está em uso. Tente fazer login ou use outro email.",
+            title: "Email já utilizado",
+            description: "Este email já foi usado anteriormente. Se você excluiu sua conta, pode haver um conflito. Tente usar outro email ou entre em contato conosco.",
+            variant: "destructive",
+          });
+        } else if (error.message.includes('signup_disabled')) {
+          toast({
+            title: "Cadastro desabilitado",
+            description: "O cadastro está temporariamente desabilitado. Tente novamente mais tarde.",
             variant: "destructive",
           });
         } else {
           toast({
             title: "Erro no cadastro",
-            description: error.message,
+            description: `Erro: ${error.message}`,
             variant: "destructive",
           });
         }
         return;
       }
 
-      console.log('Usuário criado com sucesso:', data);
+      console.log('=== SIGNUP BEM-SUCEDIDO ===');
+      console.log('Usuário criado:', data.user);
+      console.log('Sessão criada:', data.session);
 
       if (data.user) {
+        console.log('Verificando se email foi confirmado automaticamente...');
+        console.log('Email confirmado:', data.user.email_confirmed_at);
+        
         // Aguardar um pouco para o trigger executar
+        console.log('Aguardando trigger executar...');
         setTimeout(async () => {
+          console.log('Verificando se perfil foi criado pelo trigger...');
+          
           // Verificar se o perfil foi criado
           const { data: profileData, error: profileError } = await supabase
             .from('profiles')
@@ -112,10 +139,12 @@ const RegisterForm = () => {
             .eq('id', data.user.id)
             .maybeSingle();
             
-          console.log('Verificação do perfil:', { profileData, profileError });
+          console.log('Resultado da verificação do perfil:', { profileData, profileError });
           
           if (!profileData && !profileError) {
-            console.log('Perfil não foi criado pelo trigger, criando manualmente...');
+            console.log('=== PERFIL NÃO FOI CRIADO PELO TRIGGER ===');
+            console.log('Criando perfil manualmente...');
+            
             // Se o perfil não foi criado pelo trigger, criar manualmente
             const { error: manualProfileError } = await supabase
               .from('profiles')
@@ -129,29 +158,37 @@ const RegisterForm = () => {
               });
               
             if (manualProfileError) {
-              console.error('Erro ao criar perfil manualmente:', manualProfileError);
+              console.error('=== ERRO AO CRIAR PERFIL MANUALMENTE ===');
+              console.error('Erro:', manualProfileError);
             } else {
-              console.log('Perfil criado manualmente com sucesso');
+              console.log('=== PERFIL CRIADO MANUALMENTE COM SUCESSO ===');
             }
+          } else if (profileData) {
+            console.log('=== PERFIL JÁ EXISTE ===');
+            console.log('Dados do perfil:', profileData);
           }
         }, 2000);
         
         if (!data.user.email_confirmed_at) {
+          console.log('Email não confirmado - enviando para confirmação');
           toast({
             title: "Cadastro realizado com sucesso!",
             description: "Verifique seu email para ativar sua conta. Em seguida, faça login.",
           });
         } else {
+          console.log('Email já confirmado automaticamente');
           toast({
             title: "Cadastro realizado com sucesso!",
             description: "Sua conta foi criada. Agora você pode fazer login.",
           });
         }
         
+        console.log('Redirecionando para login...');
         navigate("/login");
       }
     } catch (error) {
-      console.error('Unexpected error during registration:', error);
+      console.error('=== ERRO INESPERADO NO CADASTRO ===');
+      console.error('Erro completo:', error);
       toast({
         title: "Erro no cadastro",
         description: "Ocorreu um erro inesperado. Tente novamente.",
@@ -159,6 +196,7 @@ const RegisterForm = () => {
       });
     } finally {
       setIsLoading(false);
+      console.log('=== FIM DO PROCESSO DE CADASTRO ===');
     }
   };
 
