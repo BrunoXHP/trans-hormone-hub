@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,23 +10,24 @@ import { useSettings } from "@/hooks/useSettings";
 import DeleteAccountDialog from "@/components/dialogs/DeleteAccountDialog";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-
 const SettingsPage = () => {
-  const { theme, setTheme } = useTheme();
+  const {
+    theme,
+    setTheme
+  } = useTheme();
   const {
     notifications,
     privacySettings,
     toggleNotification,
-    togglePrivacy,
+    togglePrivacy
   } = useSettings();
-  const { signOut } = useAuth();
-
+  const {
+    signOut
+  } = useAuth();
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
   };
-
-  return (
-    <DashboardLayout>
+  return <DashboardLayout>
       <div className="w-full max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Configurações</h1>
         
@@ -50,11 +50,7 @@ const SettingsPage = () => {
                       Receba notificações por email
                     </p>
                   </div>
-                  <Switch
-                    id="email-notifications"
-                    checked={notifications.email}
-                    onCheckedChange={() => toggleNotification("email")}
-                  />
+                  <Switch id="email-notifications" checked={notifications.email} onCheckedChange={() => toggleNotification("email")} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -63,11 +59,7 @@ const SettingsPage = () => {
                       Receba notificações por SMS
                     </p>
                   </div>
-                  <Switch
-                    id="sms-notifications"
-                    checked={notifications.sms}
-                    onCheckedChange={() => toggleNotification("sms")}
-                  />
+                  <Switch id="sms-notifications" checked={notifications.sms} onCheckedChange={() => toggleNotification("sms")} />
                 </div>
               </div>
               
@@ -82,11 +74,7 @@ const SettingsPage = () => {
                       Lembretes de consultas e compromissos
                     </p>
                   </div>
-                  <Switch
-                    id="appointment-reminders"
-                    checked={notifications.appointments}
-                    onCheckedChange={() => toggleNotification("appointments")}
-                  />
+                  <Switch id="appointment-reminders" checked={notifications.appointments} onCheckedChange={() => toggleNotification("appointments")} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -95,11 +83,7 @@ const SettingsPage = () => {
                       Lembretes de medicação e tratamentos
                     </p>
                   </div>
-                  <Switch
-                    id="medication-reminders"
-                    checked={notifications.reminders}
-                    onCheckedChange={() => toggleNotification("reminders")}
-                  />
+                  <Switch id="medication-reminders" checked={notifications.reminders} onCheckedChange={() => toggleNotification("reminders")} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -108,11 +92,7 @@ const SettingsPage = () => {
                       Informações e atualizações do sistema
                     </p>
                   </div>
-                  <Switch
-                    id="system-updates"
-                    checked={notifications.updates}
-                    onCheckedChange={() => toggleNotification("updates")}
-                  />
+                  <Switch id="system-updates" checked={notifications.updates} onCheckedChange={() => toggleNotification("updates")} />
                 </div>
               </div>
             </CardContent>
@@ -121,10 +101,8 @@ const SettingsPage = () => {
           {/* Privacy & Theme */}
           <Card className="md:col-span-3 lg:col-span-1">
             <CardHeader>
-              <CardTitle>Privacidade e Tema</CardTitle>
-              <CardDescription>
-                Configure suas preferências de privacidade e aparência
-              </CardDescription>
+              <CardTitle>Tema</CardTitle>
+              <CardDescription>Configure sua preferência de aparência</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -136,11 +114,7 @@ const SettingsPage = () => {
                       Compartilhar dados anônimos para melhorar o serviço
                     </p>
                   </div>
-                  <Switch
-                    id="data-sharing"
-                    checked={privacySettings.shareData}
-                    onCheckedChange={() => togglePrivacy("shareData")}
-                  />
+                  <Switch id="data-sharing" checked={privacySettings.shareData} onCheckedChange={() => togglePrivacy("shareData")} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
@@ -149,11 +123,7 @@ const SettingsPage = () => {
                       Permitir uso de dados para pesquisas acadêmicas
                     </p>
                   </div>
-                  <Switch
-                    id="research"
-                    checked={privacySettings.allowResearch}
-                    onCheckedChange={() => togglePrivacy("allowResearch")}
-                  />
+                  <Switch id="research" checked={privacySettings.allowResearch} onCheckedChange={() => togglePrivacy("allowResearch")} />
                 </div>
               </div>
               
@@ -162,25 +132,13 @@ const SettingsPage = () => {
               <div className="space-y-4">
                 <h3 className="text-sm font-medium">Tema</h3>
                 <div className="grid grid-cols-3 gap-2">
-                  <Button 
-                    variant={theme === "light" ? "default" : "outline"} 
-                    className="w-full"
-                    onClick={() => handleThemeChange("light")}
-                  >
+                  <Button variant={theme === "light" ? "default" : "outline"} className="w-full" onClick={() => handleThemeChange("light")}>
                     Claro
                   </Button>
-                  <Button 
-                    variant={theme === "dark" ? "default" : "outline"} 
-                    className="w-full"
-                    onClick={() => handleThemeChange("dark")}
-                  >
+                  <Button variant={theme === "dark" ? "default" : "outline"} className="w-full" onClick={() => handleThemeChange("dark")}>
                     Escuro
                   </Button>
-                  <Button 
-                    variant={theme === "system" ? "default" : "outline"} 
-                    className="w-full"
-                    onClick={() => handleThemeChange("system")}
-                  >
+                  <Button variant={theme === "system" ? "default" : "outline"} className="w-full" onClick={() => handleThemeChange("system")}>
                     Sistema
                   </Button>
                 </div>
@@ -220,12 +178,7 @@ const SettingsPage = () => {
                     Clique abaixo para sair da sua conta com segurança.
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  className="text-destructive border-destructive"
-                  onClick={signOut}
-                  title="Sair da conta"
-                >
+                <Button variant="outline" className="text-destructive border-destructive" onClick={signOut} title="Sair da conta">
                   <LogOut size={18} className="mr-2" />
                   Sair
                 </Button>
@@ -234,8 +187,6 @@ const SettingsPage = () => {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
-  );
+    </DashboardLayout>;
 };
-
 export default SettingsPage;
