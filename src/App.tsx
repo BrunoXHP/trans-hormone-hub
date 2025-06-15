@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -20,6 +19,7 @@ import { default as DashboardInfoPage } from "./pages/dashboard/InfoPage";
 import CommunityPage from "./pages/dashboard/CommunityPage";
 import SettingsPage from "./pages/dashboard/SettingsPage";
 import NotFound from "./pages/NotFound";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 // Criar o cliente de consultas fora do componente para evitar recriações
 const queryClient = new QueryClient();
@@ -37,6 +37,7 @@ const App = () => (
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/info" element={<InfoPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/about" element={<AboutPage />} />

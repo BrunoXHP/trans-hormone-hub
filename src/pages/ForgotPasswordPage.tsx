@@ -1,4 +1,3 @@
-
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePasswordReset } from "@/hooks/usePasswordReset";
 
 const formSchema = z.object({
   email: z.string().email("Digite um email válido"),
@@ -34,12 +34,20 @@ const ForgotPasswordPage = () => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    // Aqui seria implementada a lógica real de recuperação de senha
-    toast.success("Email de recuperação enviado com sucesso!", {
-      description: "Verifique sua caixa de entrada para as instruções",
-    });
-    console.log("Recuperação de senha solicitada para:", data.email);
+  const { requestReset, loading } = usePasswordReset();
+
+  const onSubmit = async (data: FormValues) => {
+    // Chama a função que solicita o reset de senha
+    const result = await requestReset(data.email);
+
+    if (result.success && result.token) {
+      // Exibe o token em um toast para demo. No futuro, um email será enviado.
+      toast.success("Token de teste (demo): " + result.token, {
+        description: "No futuro, você receberá instruções por email.",
+        duration: 20000,
+      });
+      console.log("Reset Token gerado para o email:", data.email, "Token:", result.token);
+    }
   };
 
   return (
@@ -70,6 +78,7 @@ const ForgotPasswordPage = () => {
                             placeholder="seu.email@exemplo.com"
                             className="pl-10"
                             {...field}
+                            disabled={loading}
                           />
                         </div>
                       </FormControl>
@@ -77,16 +86,22 @@ const ForgotPasswordPage = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Enviar Instruções
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Enviando..." : "Enviar Instruções"}
                 </Button>
               </form>
             </Form>
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex flex-col gap-2 items-center">
             <div className="text-center text-sm">
               <Link to="/login" className="text-primary hover:underline">
                 Voltar para o login
+              </Link>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Já tem um token?{" "}
+              <Link to="/reset-password" className="text-primary hover:underline">
+                Redefinir senha
               </Link>
             </div>
           </CardFooter>
