@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -126,18 +125,33 @@ export const useAgenda = () => {
     }
   };
 
+  // Mostra eventos de hoje em diante, incluindo aqueles criados ontem mas ainda são para hoje ou depois
   const getUpcomingEvents = (limit: number = 3) => {
     const now = new Date();
-    now.setHours(0, 0, 0, 0); // Set to start of today
-    
+    now.setHours(0, 0, 0, 0); // Começo do dia de hoje
+
     return events
       .filter(event => {
         const eventDate = new Date(event.date);
         eventDate.setHours(0, 0, 0, 0);
+        // Inclui hoje e datas futuras
         return eventDate >= now;
       })
       .sort((a, b) => new Date(a.date + 'T' + (a.time || '00:00')).getTime() - new Date(b.date + 'T' + (b.time || '00:00')).getTime())
       .slice(0, limit);
+  };
+
+  // Novo: retorna todos os dias do mês que têm ao menos um evento
+  const getEventDaysInMonth = (year: number, month: number) => {
+    // month: 0-11 (como no JS Date)
+    return events.reduce<number[]>((days, event) => {
+      const d = new Date(event.date);
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        const day = d.getDate();
+        if (!days.includes(day)) days.push(day);
+      }
+      return days;
+    }, []);
   };
 
   const getPastEvents = () => {
@@ -161,5 +175,6 @@ export const useAgenda = () => {
     getUpcomingEvents,
     getPastEvents,
     refetch: fetchEvents,
+    getEventDaysInMonth,
   };
 };

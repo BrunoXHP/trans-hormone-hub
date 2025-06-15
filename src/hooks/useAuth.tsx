@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,7 +32,6 @@ export const useAuth = () => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Defer profile fetch to avoid blocking auth state change
           setTimeout(() => {
             fetchProfile(session.user.id);
           }, 0);
@@ -62,6 +60,21 @@ export const useAuth = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Se não achar perfil, desloga do dashboard
+  useEffect(() => {
+    if (!loading && user && !profile) {
+      // Perfil foi excluido, mas user ainda existe (inconsistente)
+      supabase.auth.signOut().then(() => {
+        toast({
+          title: "Acesso bloqueado",
+          description: "Sua conta não existe mais. Faça login novamente.",
+          variant: "destructive",
+        });
+        navigate("/");
+      });
+    }
+  }, [profile, loading, user]);
 
   const fetchProfile = async (userId: string) => {
     try {
