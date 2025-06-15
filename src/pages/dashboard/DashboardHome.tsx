@@ -1,4 +1,3 @@
-
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Calendar, User } from "lucide-react";
@@ -8,9 +7,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateProfileCompletion } from "@/utils/profileCompletion";
-
 const DashboardHome = () => {
-  const { profile, loading } = useAuth();
+  const {
+    profile,
+    loading
+  } = useAuth();
   const navigate = useNavigate();
 
   // Usa a data de início da terapia do perfil, se houver
@@ -22,16 +23,24 @@ const DashboardHome = () => {
     if (!startDate) return undefined;
     const start = new Date(startDate);
     const now = new Date();
-    start.setHours(0,0,0,0);
-    now.setHours(0,0,0,0);
+    start.setHours(0, 0, 0, 0);
+    now.setHours(0, 0, 0, 0);
     const diffTime = now.getTime() - start.getTime();
     const days = Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
     return days;
   }, [profile]);
 
   // Perfil completo: calcula progresso e campo faltante
-  const { percent, missing, firstMissingKey } = useMemo(() => {
-    if (!profile) return { percent: 0, missing: [], firstMissingKey: undefined };
+  const {
+    percent,
+    missing,
+    firstMissingKey
+  } = useMemo(() => {
+    if (!profile) return {
+      percent: 0,
+      missing: [],
+      firstMissingKey: undefined
+    };
     return calculateProfileCompletion({
       name: profile.name,
       email: profile.email,
@@ -40,7 +49,7 @@ const DashboardHome = () => {
       phone: profile.phone || "",
       startDate: (profile as any).startDate || "",
       currentTherapy: (profile as any).currentTherapy || "",
-      avatar: "",
+      avatar: ""
     });
   }, [profile]);
 
@@ -49,9 +58,7 @@ const DashboardHome = () => {
     if (!firstMissingKey) return;
     navigate(`/dashboard/profile?focus=${firstMissingKey}`);
   };
-
-  return (
-    <DashboardLayout>
+  return <DashboardLayout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
@@ -81,29 +88,10 @@ const DashboardHome = () => {
               </p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">
-                Próximas Consultas
-              </CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">3</div>
-              <p className="text-xs text-muted-foreground">
-                Este mês
-              </p>
-            </CardContent>
-          </Card>
+          
           {/* Card de Registro de Progresso REMOVIDO */}
 
-          <Card
-            className={percent < 100 ? "cursor-pointer hover:shadow-lg ring-2 ring-primary/20 transition-shadow" : ""}
-            onClick={percent < 100 && firstMissingKey ? handleGoToProfile : undefined}
-            tabIndex={percent < 100 ? 0 : -1}
-            role={percent < 100 ? "button" : undefined}
-            title={percent < 100 ? "Clique para completar seu perfil" : ""}
-          >
+          <Card className={percent < 100 ? "cursor-pointer hover:shadow-lg ring-2 ring-primary/20 transition-shadow" : ""} onClick={percent < 100 && firstMissingKey ? handleGoToProfile : undefined} tabIndex={percent < 100 ? 0 : -1} role={percent < 100 ? "button" : undefined} title={percent < 100 ? "Clique para completar seu perfil" : ""}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">
                 Perfil Completo
@@ -115,24 +103,17 @@ const DashboardHome = () => {
                 <span className="text-2xl font-bold text-foreground">{percent}%</span>
                 <div className="w-full">
                   <div className="h-2 rounded-full bg-secondary">
-                    <div
-                      className="h-2 rounded-full bg-primary transition-all"
-                      style={{ width: `${percent}%` }}
-                    ></div>
+                    <div className="h-2 rounded-full bg-primary transition-all" style={{
+                    width: `${percent}%`
+                  }}></div>
                   </div>
                 </div>
               </div>
-              {percent < 100 ? (
-                <p className="mt-2 text-xs text-destructive font-medium">
-                  {missing.length === 1
-                    ? "Complete seu perfil — falta um campo"
-                    : `Complete seu perfil — faltam ${missing.length} campos`}
-                </p>
-              ) : (
-                <p className="mt-2 text-xs text-muted-foreground">
+              {percent < 100 ? <p className="mt-2 text-xs text-destructive font-medium">
+                  {missing.length === 1 ? "Complete seu perfil — falta um campo" : `Complete seu perfil — faltam ${missing.length} campos`}
+                </p> : <p className="mt-2 text-xs text-muted-foreground">
                   Parabéns! Seu perfil está completo 🎉
-                </p>
-              )}
+                </p>}
             </CardContent>
           </Card>
         </div>
@@ -155,8 +136,6 @@ const DashboardHome = () => {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
-  );
+    </DashboardLayout>;
 };
-
 export default DashboardHome;
