@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar, Plus } from "lucide-react";
 import { useAgenda } from "@/hooks/useAgenda";
 import { toast } from "sonner";
-
 const AddAgendaEventModal = () => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -41,10 +39,7 @@ const AddAgendaEventModal = () => {
   };
   return <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Adicionar Evento
-        </Button>
+        
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
