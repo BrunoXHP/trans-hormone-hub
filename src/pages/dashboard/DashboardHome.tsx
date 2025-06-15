@@ -1,3 +1,4 @@
+
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Calendar, User } from "lucide-react";
@@ -12,16 +13,21 @@ const DashboardHome = () => {
   const { profile, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Calcula os dias de jornada baseado em created_at do perfil
-  const daysSinceStart = useMemo(() => {
-    if (!profile?.created_at) return 0;
-    const createdAtDate = new Date(profile.created_at);
+  // Usa a data de início da terapia do perfil, se houver
+  const daysSinceTherapyStart = useMemo(() => {
+    // O campo se chama startDate e é string (formato yyyy-mm-dd)
+    if (!profile) return undefined;
+    // Aqui você pode dar fallback (retrocompatibilidade) caso o campo não exista
+    const startDate = (profile as any).startDate || ""; // (any) pois profile tipado não tem startDate
+    if (!startDate) return undefined;
+    const start = new Date(startDate);
     const now = new Date();
-    createdAtDate.setHours(0,0,0,0);
+    start.setHours(0,0,0,0);
     now.setHours(0,0,0,0);
-    const diffTime = now.getTime() - createdAtDate.getTime();
-    return Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
-  }, [profile?.created_at]);
+    const diffTime = now.getTime() - start.getTime();
+    const days = Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
+    return days;
+  }, [profile]);
 
   // Perfil completo: calcula progresso e campo faltante
   const { percent, missing, firstMissingKey } = useMemo(() => {
@@ -32,8 +38,8 @@ const DashboardHome = () => {
       gender: profile.gender,
       birthdate: profile.birth_date || "",
       phone: profile.phone || "",
-      startDate: "", // Será preenchido só na profileData do perfil (deixar vazio: não computa aqui)
-      currentTherapy: "",
+      startDate: (profile as any).startDate || "",
+      currentTherapy: (profile as any).currentTherapy || "",
       avatar: "",
     });
   }, [profile]);
@@ -68,10 +74,10 @@ const DashboardHome = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {loading ? "..." : daysSinceStart}
+                {loading ? "..." : daysSinceTherapyStart ?? "..."}
               </div>
               <p className="text-xs text-muted-foreground">
-                Desde a criação da sua conta
+                Desde o início da sua terapia hormonal
               </p>
             </CardContent>
           </Card>
