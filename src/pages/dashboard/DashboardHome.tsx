@@ -3,7 +3,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Calendar, User, TrendingUp } from "lucide-react";
 import AgendaSection from "@/components/dashboard/AgendaSection";
-import AddAgendaEventModal from "@/components/modals/AddAgendaEventModal";
+// Removido: import AddAgendaEventModal from "@/components/modals/AddAgendaEventModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemo } from "react";
 
@@ -32,7 +32,7 @@ const DashboardHome = () => {
               Acompanhe seu progresso e gerencie sua jornada.
             </p>
           </div>
-          <AddAgendaEventModal />
+          {/* Removido: <AddAgendaEventModal /> */}
         </div>
 
         {/* Stats Cards */}
