@@ -39,9 +39,12 @@ export const usePostComments = ({
       // Agrupar comentários por post
       const commentsByPost: { [key: string]: Comment[] } = {};
       data?.forEach((comment: any) => {
-        const user_name =
-          comment.profiles && typeof comment.profiles === "object" && comment.profiles && "name" in comment.profiles && comment.profiles.name
-            ? comment.profiles.name
+        const user_name = 
+          comment.profiles && 
+          typeof comment.profiles === "object" && 
+          'name' in comment.profiles && 
+          comment.profiles.name
+            ? String(comment.profiles.name)
             : "Usuário";
         const user_avatar = user_name ? user_name.charAt(0) : "U";
 
@@ -113,9 +116,12 @@ export const usePostComments = ({
         return;
       }
 
-      const user_name =
-        data.profiles && typeof data.profiles === "object" && data.profiles && "name" in data.profiles && data.profiles.name
-          ? data.profiles.name
+      const user_name = 
+        data.profiles && 
+        typeof data.profiles === "object" && 
+        'name' in data.profiles && 
+        data.profiles.name
+          ? String(data.profiles.name)
           : "Usuário";
       const user_avatar = user_name ? user_name.charAt(0) : "U";
 
@@ -141,7 +147,7 @@ export const usePostComments = ({
   const removeComment = async (commentId: string, postId: string) => {
     try {
       const { error } = await supabase
-        .from("post_comments" as any)
+        .from("post_comments")
         .delete()
         .eq("id", commentId);
 

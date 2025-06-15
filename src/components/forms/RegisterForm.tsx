@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -60,7 +59,14 @@ const RegisterForm = () => {
     try {
       const finalGender = gender === "other" ? customGender : gender;
       
-      // Configurar o cadastro para exigir confirmação de email
+      console.log('Tentando cadastrar usuário com dados:', {
+        email,
+        name,
+        gender: finalGender,
+        birth_date: birthDate,
+        phone
+      });
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -93,22 +99,54 @@ const RegisterForm = () => {
         return;
       }
 
+      console.log('Usuário criado com sucesso:', data);
+
       if (data.user) {
-        // Se o usuário foi criado mas não está confirmado
+        // Aguardar um pouco para o trigger executar
+        setTimeout(async () => {
+          // Verificar se o perfil foi criado
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .maybeSingle();
+            
+          console.log('Verificação do perfil:', { profileData, profileError });
+          
+          if (!profileData && !profileError) {
+            console.log('Perfil não foi criado pelo trigger, criando manualmente...');
+            // Se o perfil não foi criado pelo trigger, criar manualmente
+            const { error: manualProfileError } = await supabase
+              .from('profiles')
+              .insert({
+                id: data.user.id,
+                name,
+                email,
+                gender: finalGender,
+                birth_date: birthDate || null,
+                phone: phone || null
+              });
+              
+            if (manualProfileError) {
+              console.error('Erro ao criar perfil manualmente:', manualProfileError);
+            } else {
+              console.log('Perfil criado manualmente com sucesso');
+            }
+          }
+        }, 2000);
+        
         if (!data.user.email_confirmed_at) {
           toast({
             title: "Cadastro realizado com sucesso!",
             description: "Verifique seu email para ativar sua conta. Em seguida, faça login.",
           });
         } else {
-          // Se por algum motivo o email já está confirmado
           toast({
             title: "Cadastro realizado com sucesso!",
             description: "Sua conta foi criada. Agora você pode fazer login.",
           });
         }
         
-        // Redirecionar para a página de login
         navigate("/login");
       }
     } catch (error) {
