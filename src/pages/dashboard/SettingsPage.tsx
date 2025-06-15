@@ -9,6 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSettings } from "@/hooks/useSettings";
 import DeleteAccountDialog from "@/components/dialogs/DeleteAccountDialog";
+import { LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
@@ -18,6 +20,7 @@ const SettingsPage = () => {
     toggleNotification,
     togglePrivacy,
   } = useSettings();
+  const { signOut } = useAuth();
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
@@ -197,7 +200,7 @@ const SettingsPage = () => {
                 Ações irreversíveis para sua conta
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium">Excluir conta</h3>
@@ -208,6 +211,24 @@ const SettingsPage = () => {
                 <DeleteAccountDialog>
                   <Button variant="destructive">Excluir</Button>
                 </DeleteAccountDialog>
+              </div>
+              {/* Botão de logout colocado na zona de perigo */}
+              <div className="flex items-center justify-between mt-4">
+                <div>
+                  <h3 className="font-medium">Sair da conta</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Clique abaixo para sair da sua conta com segurança.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  className="text-destructive border-destructive"
+                  onClick={signOut}
+                  title="Sair da conta"
+                >
+                  <LogOut size={18} className="mr-2" />
+                  Sair
+                </Button>
               </div>
             </CardContent>
           </Card>

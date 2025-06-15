@@ -1,7 +1,7 @@
 
 import { ReactNode } from "react";
 import DashboardSidebar from "./DashboardSidebar";
-import { Menu, LogOut } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,8 +16,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const isMobile = useIsMobile();
-  const { profile, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { profile } = useAuth();
 
   const getUserDisplayName = () => {
     if (profile?.name) {
@@ -26,9 +25,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return "Usuário";
   };
 
-  // Novos: Avatar do perfil (inclusivo, olha na propriedade profile)
-  // Mudança de comportamento: avatar do user pode ser uma imagem!
-  // Salvamos o avatar em localStorage (pelo useProfile), logo buscamos lá também:
+  // Sincronização do Avatar
   let profileAvatar: string | undefined;
   try {
     const { avatar } = JSON.parse(localStorage.getItem('profileData') || "{}");
@@ -80,16 +77,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 )}
               </Avatar>
             </Link>
-            <Button
-              size="icon"
-              variant="ghost"
-              aria-label="Sair"
-              className="text-destructive hover:bg-destructive/10"
-              onClick={() => signOut()}
-              title="Sair da conta"
-            >
-              <LogOut size={20} />
-            </Button>
+            {/* BOTÃO DE SAIR REMOVIDO DO HEADER */}
           </div>
         </header>
         
