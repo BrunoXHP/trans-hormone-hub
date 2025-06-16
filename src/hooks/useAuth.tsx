@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,18 +32,10 @@ export const useAuth = () => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Verificar se o email foi confirmado antes de buscar o perfil
-          if (session.user.email_confirmed_at) {
-            console.log('Email confirmed, fetching profile...');
-            setTimeout(() => {
-              fetchProfile(session.user.id);
-            }, 0);
-          } else {
-            console.log('Email not confirmed yet');
-            setProfile(null);
-          }
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
         } else {
-          console.log('No user session, clearing profile');
           setProfile(null);
         }
         
@@ -54,27 +45,15 @@ export const useAuth = () => {
 
     // Then check for existing session
     const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-        }
-        
-        console.log('Initial session check:', session?.user?.id);
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user && session.user.email_confirmed_at) {
-          console.log('Initial session has confirmed user, fetching profile...');
-          await fetchProfile(session.user.id);
-        }
-        
-        setLoading(false);
-      } catch (error) {
-        console.error('Unexpected error getting session:', error);
-        setLoading(false);
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        await fetchProfile(session.user.id);
       }
+      
+      setLoading(false);
     };
 
     getInitialSession();
@@ -82,10 +61,9 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Se não achar perfil, desloga do dashboard (apenas se o email estiver confirmado)
+  // Se não achar perfil, desloga do dashboard
   useEffect(() => {
-    if (!loading && user && user.email_confirmed_at && !profile) {
-      console.log('User confirmed but no profile found, signing out...');
+    if (!loading && user && !profile) {
       // Perfil foi excluido, mas user ainda existe (inconsistente)
       supabase.auth.signOut().then(() => {
         toast({
@@ -114,28 +92,7 @@ export const useAuth = () => {
       }
 
       console.log('Profile fetched:', data);
-      
-      if (!data) {
-        console.log('No profile found for user:', userId);
-        // Tentar aguardar um pouco e buscar novamente
-        setTimeout(async () => {
-          console.log('Retrying profile fetch...');
-          const { data: retryData, error: retryError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .maybeSingle();
-            
-          if (retryError) {
-            console.error('Retry fetch error:', retryError);
-          } else {
-            console.log('Retry profile result:', retryData);
-            setProfile(retryData);
-          }
-        }, 3000);
-      } else {
-        setProfile(data);
-      }
+      setProfile(data);
     } catch (error) {
       console.error('Unexpected error fetching profile:', error);
     }
@@ -152,17 +109,6 @@ export const useAuth = () => {
 
       if (error) {
         console.error('Sign in error:', error);
-        
-        // Verificar se é erro de email não confirmado
-        if (error.message.includes('Email not confirmed')) {
-          toast({
-            title: "Email não confirmado",
-            description: "Por favor, verifique seu email e clique no link de confirmação antes de fazer login.",
-            variant: "destructive",
-          });
-          return false;
-        }
-        
         toast({
           title: "Erro no login",
           description: error.message,
@@ -172,18 +118,6 @@ export const useAuth = () => {
       }
 
       console.log('Sign in successful:', data.user?.id);
-      
-      // Verificar se o email foi confirmado
-      if (!data.user?.email_confirmed_at) {
-        toast({
-          title: "Email não confirmado",
-          description: "Por favor, verifique seu email e clique no link de confirmação.",
-          variant: "destructive",
-        });
-        await supabase.auth.signOut();
-        return false;
-      }
-      
       toast({
         title: "Login realizado com sucesso!",
         description: "Bem-vindo de volta.",
