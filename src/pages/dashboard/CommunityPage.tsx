@@ -10,7 +10,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useCommunityPosts } from "@/hooks/useCommunityPosts";
-import { useCommunityEvents } from "@/hooks/useCommunityEvents";
 import CommentSection from "@/components/community/CommentSection";
 
 interface Post {
@@ -30,6 +29,18 @@ interface Group {
   description: string;
   members: number;
   category: string;
+  image: string;
+}
+
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  location: string;
+  category: string;
+  organizer: string;
+  attendees: number;
   image: string;
 }
 
@@ -74,7 +85,41 @@ const CommunityPage = () => {
     }
   ]);
   
-  const { events, loading: loadingEvents } = useCommunityEvents();
+  const [events, setEvents] = useState<Event[]>([
+    {
+      id: "1",
+      title: "Encontro de Conscientização Trans",
+      description: "Evento presencial para conscientização e celebração da comunidade trans, com palestras e atividades culturais.",
+      date: new Date(2025, 5, 29, 14, 0),
+      location: "Centro Cultural da Diversidade - São Paulo",
+      category: "Presencial",
+      organizer: "Associação TransVida",
+      attendees: 87,
+      image: "EC"
+    },
+    {
+      id: "2",
+      title: "Workshop Online: Direitos e Saúde",
+      description: "Workshop online sobre direitos legais e acesso à saúde para pessoas trans, com especialistas da área.",
+      date: new Date(2025, 5, 15, 19, 0),
+      location: "Online - Plataforma Zoom",
+      category: "Online",
+      organizer: "Instituto TransFormação",
+      attendees: 124,
+      image: "WO"
+    },
+    {
+      id: "3",
+      title: "Grupo de Conversa Mensal",
+      description: "Encontro mensal para compartilhar experiências e construir redes de apoio entre pessoas trans.",
+      date: new Date(2025, 6, 10, 18, 30),
+      location: "Café Diverso - Rio de Janeiro",
+      category: "Presencial",
+      organizer: "Coletivo TransReal",
+      attendees: 32,
+      image: "GC"
+    }
+  ]);
 
   const handleCreatePost = () => {
     if (newPost.trim() === "") return;
@@ -95,8 +140,8 @@ const CommunityPage = () => {
   const filteredEvents = searchEvent
     ? events.filter(event => 
         event.title.toLowerCase().includes(searchEvent.toLowerCase()) || 
-        (event.description || "").toLowerCase().includes(searchEvent.toLowerCase()) ||
-        (event.location || "").toLowerCase().includes(searchEvent.toLowerCase()))
+        event.description.toLowerCase().includes(searchEvent.toLowerCase()) ||
+        event.location.toLowerCase().includes(searchEvent.toLowerCase()))
     : events;
 
   return (
@@ -263,68 +308,47 @@ const CommunityPage = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {loadingEvents ? (
-                    <p className="text-muted-foreground">Carregando eventos...</p>
-                  ) : (
-                    <ScrollArea className="max-h-[600px]">
-                      {filteredEvents.length === 0 ? (
-                        <div className="text-muted-foreground text-sm px-2">Nenhum evento encontrado.</div>
-                      ) : (
-                        filteredEvents.map(event => (
-                          <Card key={event.id} className="mb-4 shadow-sm">
-                            <CardContent className="pt-6">
-                              <div className="flex flex-col sm:flex-row gap-4">
-                                <div className="bg-primary/10 w-full sm:w-32 h-24 sm:h-32 flex items-center justify-center text-xl font-medium text-primary rounded">
-                                  {event.image}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex justify-between items-start flex-wrap gap-2">
-                                    <h3 className="font-medium text-lg">{event.title}</h3>
-                                    <Badge variant="outline">{event.category}</Badge>
-                                  </div>
-                                  
-                                  <div className="flex items-center text-sm text-muted-foreground mt-2">
-                                    <CalendarDays size={16} className="mr-2" />
-                                    <span>
-                                      {(() => {
-                                        // Show date and time nicely
-                                        const d = new Date(event.date + (event.time ? 'T' + event.time : ''));
-                                        return [
-                                          d.toLocaleDateString(),
-                                          event.time && d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                        ].filter(Boolean).join(", ");
-                                      })()}
-                                    </span>
-                                  </div>
-                                  
-                                  {event.location && (
-                                    <div className="text-sm text-muted-foreground mt-1">
-                                      <span className="font-medium">Local:</span> {event.location}
-                                    </div>
-                                  )}
-                                  
-                                  {event.description && (
-                                    <p className="text-sm mt-2">{event.description}</p>
-                                  )}
-                                  
-                                  <div className="mt-4 flex flex-wrap gap-2">
-                                    <Button size="sm" className="text-xs">
-                                      <Calendar size={14} className="mr-1" />
-                                      Participar
-                                    </Button>
-                                    <Button variant="outline" size="sm" className="text-xs">
-                                      <Share size={14} className="mr-1" />
-                                      Compartilhar
-                                    </Button>
-                                  </div>
-                                </div>
+                  <ScrollArea className="max-h-[600px]">
+                    {filteredEvents.map(event => (
+                      <Card key={event.id} className="mb-4 shadow-sm">
+                        <CardContent className="pt-6">
+                          <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="bg-primary/10 w-full sm:w-32 h-24 sm:h-32 flex items-center justify-center text-xl font-medium text-primary rounded">
+                              {event.image}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start flex-wrap gap-2">
+                                <h3 className="font-medium text-lg">{event.title}</h3>
+                                <Badge variant="outline">{event.category}</Badge>
                               </div>
-                            </CardContent>
-                          </Card>
-                        ))
-                      )}
-                    </ScrollArea>
-                  )}
+                              
+                              <div className="flex items-center text-sm text-muted-foreground mt-2">
+                                <CalendarDays size={16} className="mr-2" />
+                                <span>{event.date.toLocaleDateString()}, {event.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                              </div>
+                              
+                              <div className="text-sm text-muted-foreground mt-1">
+                                <span className="font-medium">Local:</span> {event.location}
+                              </div>
+                              
+                              <p className="text-sm mt-2">{event.description}</p>
+                              
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                <Button size="sm" className="text-xs">
+                                  <Calendar size={14} className="mr-1" />
+                                  Participar
+                                </Button>
+                                <Button variant="outline" size="sm" className="text-xs">
+                                  <Share size={14} className="mr-1" />
+                                  Compartilhar
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </ScrollArea>
                 </div>
                 
                 <div className="flex justify-center mt-6">
@@ -343,3 +367,5 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
+
+// ... keep existing code (CommentSection component)

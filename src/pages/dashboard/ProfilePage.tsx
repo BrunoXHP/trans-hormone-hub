@@ -1,46 +1,16 @@
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Camera, Save } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import PersonalInfoCard from "@/components/profile/PersonalInfoCard";
-import TherapyInfoCard from "@/components/profile/TherapyInfoCard";
 
 const ProfilePage = () => {
   const { profileData, updateProfile, saveProfile, updateAvatar } = useProfile();
-  const location = useLocation();
-
-  // Definir refs corretos por tipo do elemento
-  const refs = {
-    name: useRef<HTMLInputElement>(null),
-    email: useRef<HTMLInputElement>(null),
-    gender: useRef<HTMLButtonElement>(null),
-    birthdate: useRef<HTMLInputElement>(null),
-    phone: useRef<HTMLInputElement>(null),
-    startDate: useRef<HTMLInputElement>(null),
-    currentTherapy: useRef<HTMLButtonElement>(null),
-    avatar: useRef<HTMLDivElement>(null),
-  };
-
-  // Detecta search param "focus" e rola até o campo
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const focus = params.get("focus");
-    if (focus && refs[focus as keyof typeof refs]) {
-      setTimeout(() => {
-        const node = refs[focus as keyof typeof refs]?.current;
-        if (node) {
-          node.scrollIntoView({ behavior: "smooth", block: "center" });
-          // Visual highlight:
-          (node as HTMLElement).classList.add("ring-2", "ring-primary");
-          setTimeout(() => (node as HTMLElement).classList.remove("ring-2", "ring-primary"), 2200);
-          if ("focus" in node) (node as HTMLElement).focus();
-        }
-      }, 280);
-    }
-  }, [location.search]);
 
   const handleInputChange = (field: string, value: string) => {
     updateProfile({ [field]: value });
@@ -79,40 +49,139 @@ const ProfilePage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Cards agrupados */}
+          {/* Informações Pessoais com Avatar */}
           <div className="lg:col-span-2 space-y-6">
-            <PersonalInfoCard
-              profileData={{
-                avatar: profileData.avatar,
-                name: profileData.name,
-                email: profileData.email,
-                gender: profileData.gender,
-                birthdate: profileData.birthdate,
-                phone: profileData.phone,
-              }}
-              onInputChange={handleInputChange}
-              onAvatarClick={handleAvatarClick}
-              refs={{
-                name: refs.name,
-                email: refs.email,
-                gender: refs.gender,
-                birthdate: refs.birthdate,
-                phone: refs.phone,
-                avatar: refs.avatar,
-              }}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-foreground">Informações Pessoais</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Avatar dentro das informações pessoais */}
+                <div className="flex flex-col items-center pb-2">
+                  <div className="relative">
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src={profileData.avatar} />
+                      <AvatarFallback className="text-2xl bg-primary/20 text-primary">
+                        {profileData.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full"
+                      onClick={handleAvatarClick}
+                    >
+                      <Camera className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-center mt-2">
+                    Clique no ícone da câmera para alterar sua foto
+                  </p>
+                </div>
 
-            <TherapyInfoCard
-              profileData={{
-                startDate: profileData.startDate,
-                currentTherapy: profileData.currentTherapy,
-              }}
-              onInputChange={handleInputChange}
-              refs={{
-                startDate: refs.startDate,
-                currentTherapy: refs.currentTherapy,
-              }}
-            />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-foreground">Nome Completo</Label>
+                    <Input
+                      id="name"
+                      value={profileData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Seu nome completo"
+                      className="text-foreground"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-foreground">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      placeholder="seu@email.com"
+                      className="text-foreground"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="gender" className="text-foreground">Identidade de Gênero</Label>
+                    <Select value={profileData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+                      <SelectTrigger className="text-foreground">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mulher-trans">Mulher Trans</SelectItem>
+                        <SelectItem value="homem-trans">Homem Trans</SelectItem>
+                        <SelectItem value="nao-binario">Não-binário</SelectItem>
+                        <SelectItem value="outro">Outro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="birthdate" className="text-foreground">Data de Nascimento</Label>
+                    <Input
+                      id="birthdate"
+                      type="date"
+                      value={profileData.birthdate}
+                      onChange={(e) => handleInputChange('birthdate', e.target.value)}
+                      className="text-foreground"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-foreground">Telefone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={profileData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    placeholder="(11) 99999-9999"
+                    className="text-foreground"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Informações da Terapia */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-foreground">Informações da Terapia</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="startDate" className="text-foreground">Data de Início da TH</Label>
+                    <Input
+                      id="startDate"
+                      type="date"
+                      value={profileData.startDate}
+                      onChange={(e) => handleInputChange('startDate', e.target.value)}
+                      className="text-foreground"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="currentTherapy" className="text-foreground">Terapia Atual</Label>
+                    <Select value={profileData.currentTherapy} onValueChange={(value) => handleInputChange('currentTherapy', value)}>
+                      <SelectTrigger className="text-foreground">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="estrogeno">Estrogênio</SelectItem>
+                        <SelectItem value="testosterona">Testosterona</SelectItem>
+                        <SelectItem value="bloqueadores">Bloqueadores</SelectItem>
+                        <SelectItem value="combinada">Terapia Combinada</SelectItem>
+                        <SelectItem value="outro">Outro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             <div className="flex justify-end">
               <Button onClick={handleSave} className="flex items-center gap-2">
@@ -121,7 +190,7 @@ const ProfilePage = () => {
               </Button>
             </div>
           </div>
-          {/* Card extra removido */}
+          {/* Removido o Card extra da foto do perfil */}
         </div>
       </div>
     </DashboardLayout>
@@ -129,3 +198,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
