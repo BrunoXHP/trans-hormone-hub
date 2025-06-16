@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -13,26 +12,69 @@ import { Input } from "@/components/ui/input";
 import { useCommunityPosts } from "@/hooks/useCommunityPosts";
 import { useCommunityEvents } from "@/hooks/useCommunityEvents";
 import CommentSection from "@/components/community/CommentSection";
-import { useCommunityGroups } from "@/hooks/useCommunityGroups";
+
+interface Post {
+  id: string;
+  author: string;
+  avatar: string;
+  content: string;
+  timestamp: Date;
+  likes: number;
+  comments: number;
+  liked: boolean;
+}
+
+interface Group {
+  id: string;
+  name: string;
+  description: string;
+  members: number;
+  category: string;
+  image: string;
+}
 
 const CommunityPage = () => {
   const [newPost, setNewPost] = useState("");
   const [searchGroup, setSearchGroup] = useState("");
   const [searchEvent, setSearchEvent] = useState("");
   const { posts, createPost, toggleLike, addComment, removeComment } = useCommunityPosts();
+  
+  const [groups, setGroups] = useState<Group[]>([
+    {
+      id: "1",
+      name: "Apoio à Transição",
+      description: "Grupo dedicado ao compartilhamento de experiências durante a transição e suporte mútuo entre pessoas trans.",
+      members: 156,
+      category: "Suporte",
+      image: "AT"
+    },
+    {
+      id: "2",
+      name: "Direitos Trans",
+      description: "Grupo focado em discussões sobre direitos legais, retificação de documentos e combate à discriminação.",
+      members: 89,
+      category: "Direitos",
+      image: "DT"
+    },
+    {
+      id: "3",
+      name: "Saúde Trans",
+      description: "Compartilhamento de informações sobre hormonização, procedimentos de afirmação de gênero e saúde mental.",
+      members: 112,
+      category: "Saúde",
+      image: "ST"
+    },
+    {
+      id: "4",
+      name: "Arte e Criatividade Trans",
+      description: "Espaço para artistas trans compartilharem obras e discutirem representatividade nas artes.",
+      members: 74,
+      category: "Arte",
+      image: "AC"
+    }
+  ]);
+  
   const { events, loading: loadingEvents } = useCommunityEvents();
-  const {
-    groups,
-    loading: loadingGroups,
-    joinGroup,
-    leaveGroup,
-    createGroup,
-    reload: reloadGroups,
-  } = useCommunityGroups();
-
-  // Create group form state (rudimentary)
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [groupForm, setGroupForm] = useState({ name: "", description: "", category: "" });
 
   const handleCreatePost = () => {
     if (newPost.trim() === "") return;
@@ -44,33 +86,15 @@ const CommunityPage = () => {
     toggleLike(id);
   };
 
-  const handleGroupFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setGroupForm({ ...groupForm, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmitGroup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await createGroup(
-      groupForm.name,
-      groupForm.description,
-      groupForm.category,
-      groupForm.name
-        ? groupForm.name.split(" ").map((x) => x[0]).join("").toUpperCase().slice(0, 2)
-        : "GR"
-    );
-    setShowCreateForm(false);
-    setGroupForm({ name: "", description: "", category: "" });
-  };
-
   const filteredGroups = searchGroup
-    ? groups.filter(group =>
-        group.name.toLowerCase().includes(searchGroup.toLowerCase()) ||
-        (group.description || "").toLowerCase().includes(searchGroup.toLowerCase()))
+    ? groups.filter(group => 
+        group.name.toLowerCase().includes(searchGroup.toLowerCase()) || 
+        group.description.toLowerCase().includes(searchGroup.toLowerCase()))
     : groups;
 
   const filteredEvents = searchEvent
-    ? events.filter(event =>
-        event.title.toLowerCase().includes(searchEvent.toLowerCase()) ||
+    ? events.filter(event => 
+        event.title.toLowerCase().includes(searchEvent.toLowerCase()) || 
         (event.description || "").toLowerCase().includes(searchEvent.toLowerCase()) ||
         (event.location || "").toLowerCase().includes(searchEvent.toLowerCase()))
     : events;
@@ -86,7 +110,7 @@ const CommunityPage = () => {
             <TabsTrigger value="groups">Grupos</TabsTrigger>
             <TabsTrigger value="events">Eventos</TabsTrigger>
           </TabsList>
-
+          
           <TabsContent value="feed" className="mt-4">
             <Card className="mb-6 shadow-sm">
               <CardHeader className="pb-3">
@@ -101,7 +125,7 @@ const CommunityPage = () => {
                       </div>
                     </Avatar>
                     <div className="flex-1">
-                      <Textarea
+                      <Textarea 
                         placeholder="O que você está pensando?"
                         value={newPost}
                         onChange={(e) => setNewPost(e.target.value)}
@@ -136,7 +160,7 @@ const CommunityPage = () => {
                           </div>
                           <p className="mb-4">{post.content}</p>
                           <div className="flex gap-4 mb-2">
-                            <button
+                            <button 
                               className={`flex items-center gap-1 text-sm ${post.liked ? 'text-primary' : 'text-muted-foreground'}`}
                               onClick={() => handleLikePost(post.id)}
                             >
@@ -144,7 +168,7 @@ const CommunityPage = () => {
                               <span>{post.likes}</span>
                             </button>
                           </div>
-                          <CommentSection
+                          <CommentSection 
                             postId={post.id}
                             comments={post.comments}
                             onAddComment={addComment}
@@ -158,7 +182,7 @@ const CommunityPage = () => {
               </ScrollArea>
             </div>
           </TabsContent>
-
+          
           <TabsContent value="groups" className="mt-4">
             <Card className="mb-6">
               <CardHeader className="pb-3">
@@ -169,117 +193,57 @@ const CommunityPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <Input
-                    placeholder="Buscar grupos..."
+                  <Input 
+                    placeholder="Buscar grupos..." 
                     value={searchGroup}
                     onChange={(e) => setSearchGroup(e.target.value)}
                     className="w-full"
                   />
                 </div>
-                {loadingGroups ? (
-                  <p className="text-muted-foreground">Carregando grupos...</p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredGroups.map(group => (
-                      <Card key={group.id} className="overflow-hidden border">
-                        <div className="flex">
-                          <div className="bg-primary/10 w-20 h-20 flex items-center justify-center text-xl font-medium text-primary">
-                            {group.image}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {filteredGroups.map(group => (
+                    <Card key={group.id} className="overflow-hidden border">
+                      <div className="flex">
+                        <div className="bg-primary/10 w-20 h-20 flex items-center justify-center text-xl font-medium text-primary">
+                          {group.image}
+                        </div>
+                        <div className="flex-1 p-4">
+                          <div className="flex justify-between items-start">
+                            <h3 className="font-medium text-base">{group.name}</h3>
+                            <Badge variant="outline" className="text-xs">{group.category}</Badge>
                           </div>
-                          <div className="flex-1 p-4">
-                            <div className="flex justify-between items-start">
-                              <h3 className="font-medium text-base">{group.name}</h3>
-                              <Badge variant="outline" className="text-xs">{group.category}</Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{group.description}</p>
-                            <div className="flex items-center mt-2 text-xs text-muted-foreground">
-                              <Users size={14} className="mr-1" />
-                              <span>{group.membersCount} membros</span>
-                            </div>
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{group.description}</p>
+                          <div className="flex items-center mt-2 text-xs text-muted-foreground">
+                            <Users size={14} className="mr-1" />
+                            <span>{group.members} membros</span>
                           </div>
                         </div>
-                        <CardFooter className="bg-muted/30 py-2 px-4 flex justify-between">
-                          {group.isMember ? (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-xs"
-                              onClick={() => leaveGroup(group.id)}
-                            >
-                              Sair do grupo
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-xs"
-                              onClick={() => joinGroup(group.id)}
-                            >
-                              <Users size={14} className="mr-1" />
-                              Participar
-                            </Button>
-                          )}
-                          <Button variant="ghost" size="sm" className="text-xs">
-                            <Share size={14} className="mr-1" />
-                            Compartilhar
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-
-                {!showCreateForm ? (
-                  <div className="flex justify-center mt-6">
-                    <Button
-                      className="w-full max-w-xs"
-                      onClick={() => setShowCreateForm(true)}
-                    >
-                      <Users size={18} className="mr-2" />
-                      Criar um novo grupo
-                    </Button>
-                  </div>
-                ) : (
-                  <form className="max-w-md mx-auto mt-6 bg-muted/50 rounded shadow px-6 py-4 space-y-4"
-                        onSubmit={handleSubmitGroup}>
-                    <h3 className="font-medium text-base">Novo Grupo</h3>
-                    <Input
-                      name="name"
-                      required
-                      placeholder="Nome do grupo"
-                      value={groupForm.name}
-                      onChange={handleGroupFormChange}
-                    />
-                    <Input
-                      name="category"
-                      required
-                      placeholder="Categoria (ex: Suporte, Direitos...)"
-                      value={groupForm.category}
-                      onChange={handleGroupFormChange}
-                    />
-                    <Textarea
-                      name="description"
-                      required
-                      placeholder="Descrição do grupo"
-                      value={groupForm.description}
-                      onChange={handleGroupFormChange}
-                    />
-                    <div className="flex gap-2 justify-end">
-                      <Button
-                        variant="ghost"
-                        type="button"
-                        onClick={() => setShowCreateForm(false)}
-                      >
-                        Cancelar
-                      </Button>
-                      <Button type="submit">Criar grupo</Button>
-                    </div>
-                  </form>
-                )}
+                      </div>
+                      <CardFooter className="bg-muted/30 py-2 px-4 flex justify-between">
+                        <Button variant="ghost" size="sm" className="text-xs">
+                          <Users size={14} className="mr-1" />
+                          Participar
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-xs">
+                          <Share size={14} className="mr-1" />
+                          Compartilhar
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center mt-6">
+                  <Button className="w-full max-w-xs">
+                    <Users size={18} className="mr-2" />
+                    Criar um novo grupo
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
-
+          
           <TabsContent value="events" className="mt-4">
             <Card className="mb-6">
               <CardHeader className="pb-3">
@@ -290,8 +254,8 @@ const CommunityPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <Input
-                    placeholder="Buscar eventos..."
+                  <Input 
+                    placeholder="Buscar eventos..." 
                     value={searchEvent}
                     onChange={(e) => setSearchEvent(e.target.value)}
                     className="w-full"
@@ -318,10 +282,12 @@ const CommunityPage = () => {
                                     <h3 className="font-medium text-lg">{event.title}</h3>
                                     <Badge variant="outline">{event.category}</Badge>
                                   </div>
+                                  
                                   <div className="flex items-center text-sm text-muted-foreground mt-2">
                                     <CalendarDays size={16} className="mr-2" />
                                     <span>
                                       {(() => {
+                                        // Show date and time nicely
                                         const d = new Date(event.date + (event.time ? 'T' + event.time : ''));
                                         return [
                                           d.toLocaleDateString(),
@@ -330,14 +296,17 @@ const CommunityPage = () => {
                                       })()}
                                     </span>
                                   </div>
+                                  
                                   {event.location && (
                                     <div className="text-sm text-muted-foreground mt-1">
                                       <span className="font-medium">Local:</span> {event.location}
                                     </div>
                                   )}
+                                  
                                   {event.description && (
                                     <p className="text-sm mt-2">{event.description}</p>
                                   )}
+                                  
                                   <div className="mt-4 flex flex-wrap gap-2">
                                     <Button size="sm" className="text-xs">
                                       <Calendar size={14} className="mr-1" />
@@ -357,6 +326,7 @@ const CommunityPage = () => {
                     </ScrollArea>
                   )}
                 </div>
+                
                 <div className="flex justify-center mt-6">
                   <Button className="w-full max-w-xs">
                     <Calendar size={18} className="mr-2" />
