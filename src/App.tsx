@@ -20,7 +20,6 @@ import CommunityPage from "./pages/dashboard/CommunityPage";
 import SettingsPage from "./pages/dashboard/SettingsPage";
 import NotFound from "./pages/NotFound";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import AdminPage from "./pages/dashboard/AdminPage";
 
 // Criar o cliente de consultas fora do componente para evitar recriações
 const queryClient = new QueryClient();
@@ -48,7 +47,6 @@ const App = () => (
               <Route path="/dashboard/info" element={<DashboardInfoPage />} />
               <Route path="/dashboard/community" element={<CommunityPage />} />
               <Route path="/dashboard/settings" element={<SettingsPage />} />
-              <Route path="/dashboard/admin" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
